@@ -1,0 +1,941 @@
+{
+  "meta": {
+    "subject": "Cơ sở dữ liệu",
+    "chapter_id": "chap_3_1",
+    "title": "Chương 3: Mô hình dữ liệu quan hệ (Phần 1)",
+    "updated_at": "2026-05-29"
+  },
+  "topics": [
+    {
+      "id": "t01",
+      "title": "Giới thiệu mô hình dữ liệu quan hệ",
+      "theory": {
+        "definition": "Mô hình dữ liệu quan hệ là một phương pháp tổ chức dữ liệu đơn giản, đồng bộ dựa trên nền tảng lý thuyết tập hợp, trong đó dữ liệu được biểu diễn dưới dạng các bảng.",
+        "explanation": "Trong mô hình này, mọi thông tin về các thực thể trong thế giới thực cũng như mối liên kết giữa chúng đều được lưu trữ trong các bảng hai chiều (gọi là quan hệ). Mỗi bảng đại diện cho một tập hợp các thực thể hoặc sự kiện. Cấu trúc này mang lại sự rõ ràng và dễ thao tác, trở thành nền tảng cho hầu hết các hệ quản trị cơ sở dữ liệu thương mại phổ biến hiện nay như Oracle, SQL Server hay DB2.\n\nĐặc điểm nổi bật của mô hình là sự phân tách rõ ràng giữa cấu trúc (cột) và dữ liệu thực tế (dòng). Thứ tự của các dòng trong một bảng không mang ý nghĩa và có thể hoán đổi, tuy nhiên thứ tự của các giá trị bên trong một dòng bắt buộc phải khớp với thứ tự của các cột tương ứng. Ngoài ra, mô hình không cho phép tồn tại hai dòng dữ liệu hoàn toàn giống nhau trong cùng một bảng.",
+        "examples": [
+          "Hệ thống quản lý nhân sự sử dụng các bảng như NHANVIEN, PHONGBAN để lưu trữ thông tin thay vì lưu trữ dưới dạng cây hay đồ thị phức tạp."
+        ],
+        "formulas": [],
+        "diagrams": [],
+        "key_points": [
+          "Được xây dựng dựa trên nền tảng lý thuyết tập hợp vững chắc.",
+          "Dữ liệu được tổ chức thống nhất dưới dạng các bảng hai chiều.",
+          "Thứ tự các dòng không quan trọng, nhưng thứ tự giá trị trong một dòng là quan trọng.",
+          "Mỗi ô trong bảng chỉ chứa một giá trị nguyên tố duy nhất hoặc giá trị rỗng (null)."
+        ],
+        "common_mistakes": [
+          "Người học thường nhầm lẫn rằng thứ tự sắp xếp các dòng trong cơ sở dữ liệu quan hệ mang một ý nghĩa logic nào đó, trong khi thực tế tập hợp các dòng là không có thứ tự."
+        ],
+        "related_topics": [
+          "t02",
+          "t03",
+          "t04"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Mô hình dữ liệu quan hệ được xây dựng dựa trên nền tảng lý thuyết nào?",
+          "options": [
+            "Lý thuyết đồ thị",
+            "Lý thuyết tập hợp",
+            "Lý thuyết xác suất",
+            "Lý thuyết cây phân cấp"
+          ],
+          "answer": "Lý thuyết tập hợp",
+          "explanation": "Đáp án đúng là 'Lý thuyết tập hợp' vì mô hình dữ liệu quan hệ là phương pháp tổ chức dữ liệu dựa trên nền tảng lý thuyết tập hợp vững chắc. Các đáp án khác sai vì mô hình này lưu trữ dưới dạng bảng thay vì cây hay đồ thị phức tạp."
+        },
+        {
+          "type": "quiz",
+          "question": "Phát biểu nào sau đây ĐÚNG về thứ tự các dòng và cột trong một bảng của mô hình quan hệ?",
+          "options": [
+            "Thứ tự các dòng mang ý nghĩa logic quan trọng và không thể hoán đổi.",
+            "Thứ tự các dòng có thể hoán đổi, nhưng thứ tự giá trị trong một dòng bắt buộc phải khớp với thứ tự cột.",
+            "Cả thứ tự dòng và thứ tự cột đều có thể hoán đổi ngẫu nhiên mà không cần khớp nhau.",
+            "Thứ tự các dòng quyết định cấu trúc của bảng, còn thứ tự cột quyết định dữ liệu thực tế."
+          ],
+          "answer": "Thứ tự các dòng có thể hoán đổi, nhưng thứ tự giá trị trong một dòng bắt buộc phải khớp với thứ tự cột.",
+          "explanation": "Đáp án đúng chỉ ra rằng tập hợp các dòng là không có thứ tự (có thể hoán đổi), nhưng giá trị bên trong dòng phải khớp với cột tương ứng. Các đáp án sai thường mắc lỗi nhầm lẫn rằng thứ tự sắp xếp các dòng mang ý nghĩa logic."
+        },
+        {
+          "type": "quiz",
+          "question": "Mô hình dữ liệu quan hệ có cho phép tồn tại hai dòng dữ liệu hoàn toàn giống nhau trong cùng một bảng không?",
+          "options": [
+            "Có, nếu chúng được nhập vào ở hai thời điểm khác nhau.",
+            "Có, vì tập hợp các dòng không có thứ tự nên có thể trùng lặp.",
+            "Không, mô hình không cho phép tồn tại hai dòng dữ liệu hoàn toàn giống nhau.",
+            "Không, trừ khi một trong hai dòng có chứa giá trị rỗng (null)."
+          ],
+          "answer": "Không, mô hình không cho phép tồn tại hai dòng dữ liệu hoàn toàn giống nhau.",
+          "explanation": "Đáp án đúng là 'Không' vì theo định nghĩa của mô hình quan hệ, không cho phép tồn tại hai dòng dữ liệu hoàn toàn giống nhau trong cùng một bảng. Các đáp án khác đưa ra các ngoại lệ không tồn tại trong lý thuyết."
+        },
+        {
+          "type": "flashcard",
+          "front": "Mô hình dữ liệu quan hệ là gì?",
+          "back": "Là phương pháp tổ chức dữ liệu đơn giản, đồng bộ dựa trên nền tảng lý thuyết tập hợp, trong đó dữ liệu được biểu diễn dưới dạng các bảng hai chiều."
+        },
+        {
+          "type": "flashcard",
+          "front": "Trong mô hình quan hệ, mỗi ô trong bảng có thể chứa loại giá trị nào?",
+          "back": "Mỗi ô chỉ chứa một giá trị nguyên tố duy nhất hoặc giá trị rỗng (null)."
+        },
+        {
+          "type": "essay",
+          "question": "Phân tích sự phân tách giữa cấu trúc và dữ liệu thực tế trong mô hình dữ liệu quan hệ. Tại sao đặc điểm này lại mang lại sự rõ ràng và dễ thao tác cho các hệ quản trị cơ sở dữ liệu?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 2
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t02",
+      "title": "Quan hệ (Relation)",
+      "theory": {
+        "definition": "Quan hệ là một bảng dữ liệu hai chiều bao gồm một tên gọi duy nhất, một tập hợp các cột cố định và một tập hợp các dòng dữ liệu có thể thay đổi theo thời gian.",
+        "explanation": "Một quan hệ đóng vai trò như một vật chứa để biểu diễn một tập hợp các thực thể cùng loại hoặc các sự kiện liên quan trong thực tế. Cấu trúc của quan hệ được định hình bởi các cột (thuộc tính), mỗi cột có một tên gọi và kiểu dữ liệu xác định, phần cấu trúc này mang tính cố định. Ngược lại, phần nội dung của quan hệ là các dòng dữ liệu, có thể liên tục thay đổi thông qua các thao tác thêm, sửa, xóa theo thời gian.\n\nSố lượng các thuộc tính (cột) cấu thành nên một quan hệ được gọi là cấp của quan hệ đó. Khái niệm quan hệ trong cơ sở dữ liệu tương đương với khái niệm tập thực thể hoặc tập mối liên kết trong mô hình ER.",
+        "examples": [
+          "Bảng NHANVIEN lưu trữ danh sách nhân viên trong công ty, trong đó mỗi cột là một thông tin như Mã NV, Tên NV, và mỗi dòng là thông tin cụ thể của một người."
+        ],
+        "formulas": [],
+        "diagrams": [],
+        "key_points": [
+          "Quan hệ bao gồm tên, tập hợp các cột (cố định) và tập hợp các dòng (thay đổi).",
+          "Một dòng tương đương với một thực thể hoặc sự kiện.",
+          "Một cột tương đương với một thuộc tính của thực thể.",
+          "Cấp của quan hệ được xác định bằng tổng số lượng thuộc tính có trong quan hệ đó."
+        ],
+        "common_mistakes": [
+          "Nhầm lẫn giữa khái niệm 'quan hệ' (relation - tức là cái bảng) với 'mối liên kết' (relationship - sự kết nối giữa các thực thể)."
+        ],
+        "related_topics": [
+          "t03",
+          "t04",
+          "t05"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Trong mô hình quan hệ, 'Cấp của quan hệ' được xác định như thế nào?",
+          "options": [
+            "Bằng tổng số lượng các dòng dữ liệu hiện có trong quan hệ.",
+            "Bằng tổng số lượng các thuộc tính (cột) cấu thành nên quan hệ đó.",
+            "Bằng số lượng các khóa chính có trong quan hệ.",
+            "Bằng số lượng các mối liên kết của quan hệ đó với các quan hệ khác."
+          ],
+          "answer": "Bằng tổng số lượng các thuộc tính (cột) cấu thành nên quan hệ đó.",
+          "explanation": "Đáp án đúng là tổng số lượng thuộc tính (cột). Các đáp án khác sai vì nhầm lẫn với số lượng dòng (thể hiện dữ liệu) hoặc các khái niệm khác như khóa, mối liên kết."
+        },
+        {
+          "type": "quiz",
+          "question": "Thành phần nào của một quan hệ mang tính cố định, và thành phần nào có thể thay đổi theo thời gian?",
+          "options": [
+            "Tập hợp các dòng là cố định, tập hợp các cột có thể thay đổi.",
+            "Tên quan hệ có thể thay đổi, cấu trúc cột và dòng là cố định.",
+            "Tập hợp các cột (cấu trúc) là cố định, tập hợp các dòng (nội dung) có thể thay đổi.",
+            "Cả cột và dòng đều mang tính cố định sau khi quan hệ được tạo ra."
+          ],
+          "answer": "Tập hợp các cột (cấu trúc) là cố định, tập hợp các dòng (nội dung) có thể thay đổi.",
+          "explanation": "Đáp án đúng phản ánh tính chất: cấu trúc (cột) được định hình cố định, trong khi nội dung (dòng) liên tục thay đổi qua các thao tác thêm, sửa, xóa. Các đáp án khác đảo ngược tính chất này hoặc cho rằng cả hai đều cố định."
+        },
+        {
+          "type": "quiz",
+          "question": "Khái niệm 'quan hệ' (relation) trong cơ sở dữ liệu tương đương với khái niệm nào trong mô hình ER?",
+          "options": [
+            "Tập thực thể hoặc tập mối liên kết",
+            "Thuộc tính đa trị",
+            "Khóa chính",
+            "Ràng buộc toàn vẹn"
+          ],
+          "answer": "Tập thực thể hoặc tập mối liên kết",
+          "explanation": "Đáp án đúng là 'Tập thực thể hoặc tập mối liên kết'. Một lỗi phổ biến là nhầm lẫn 'quan hệ' (cái bảng) với 'mối liên kết' (sự kết nối), nhưng trong mô hình ER, một bảng có thể đại diện cho một tập thực thể hoặc một tập mối liên kết."
+        },
+        {
+          "type": "flashcard",
+          "front": "Quan hệ (Relation) trong cơ sở dữ liệu là gì?",
+          "back": "Là một bảng dữ liệu hai chiều bao gồm một tên gọi duy nhất, một tập hợp các cột cố định và một tập hợp các dòng dữ liệu có thể thay đổi theo thời gian."
+        },
+        {
+          "type": "flashcard",
+          "front": "Một dòng và một cột trong quan hệ tương đương với điều gì trong thực tế?",
+          "back": "Một dòng tương đương với một thực thể hoặc sự kiện. Một cột tương đương với một thuộc tính của thực thể đó."
+        },
+        {
+          "type": "essay",
+          "question": "So sánh sự khác biệt giữa khái niệm 'quan hệ' (relation) trong mô hình dữ liệu quan hệ và 'mối liên kết' (relationship) trong mô hình ER. Tại sao người học thường nhầm lẫn hai khái niệm này?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 6
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t03",
+      "title": "Thuộc tính và Miền giá trị",
+      "theory": {
+        "definition": "Thuộc tính là các cột trong quan hệ dùng để mô tả đặc điểm của dữ liệu, còn miền giá trị là tập hợp tất cả các giá trị nguyên tố hợp lệ mà một thuộc tính có thể nhận.",
+        "explanation": "Mỗi thuộc tính trong một bảng đại diện cho một khía cạnh thông tin cụ thể và phải được đặt tên rõ ràng. Đặc điểm quan trọng nhất của thuộc tính là tất cả các dữ liệu nằm trong cùng một cột đều phải tuân theo một kiểu dữ liệu thống nhất.\n\nMiền giá trị đóng vai trò như một bộ lọc, quy định những giá trị nào được phép xuất hiện tại một thuộc tính. Trong mô hình quan hệ chuẩn, miền giá trị bắt buộc phải chứa các giá trị nguyên tố, nghĩa là những giá trị đơn lẻ không thể chia cắt nhỏ hơn nữa. Do đó, các kiểu dữ liệu phức tạp chứa nhiều phần tử như mảng (array), danh sách (list) hay tập hợp (set) đều không được chấp nhận làm miền giá trị cho một thuộc tính.",
+        "examples": [
+          "Thuộc tính 'Giới tính' có miền giá trị là tập hợp chuỗi ký tự gồm {'Nam', 'Nữ'}.",
+          "Thuộc tính 'Điểm thi' có miền giá trị là các số thực nằm trong khoảng từ 0 đến 10."
+        ],
+        "formulas": [
+          {
+            "name": "Ký hiệu miền giá trị",
+            "expression": "Dom(A)",
+            "note": "Thể hiện miền giá trị của thuộc tính A, tức là tập các giá trị hợp lệ mà A có thể nhận."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Thuộc tính là tên các cột, mô tả ý nghĩa cho dữ liệu tại cột đó.",
+          "Dữ liệu trong cùng một cột phải có chung một kiểu dữ liệu.",
+          "Miền giá trị là tập các giá trị nguyên tố gắn liền với một thuộc tính.",
+          "Mô hình quan hệ không chấp nhận các kiểu dữ liệu phức tạp như mảng hay danh sách."
+        ],
+        "common_mistakes": [
+          "Cố gắng lưu trữ một danh sách các giá trị (ví dụ: danh sách số điện thoại) vào chung một ô dữ liệu của một thuộc tính, vi phạm quy tắc giá trị nguyên tố."
+        ],
+        "related_topics": [
+          "t02"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Miền giá trị (Domain) của một thuộc tính là gì?",
+          "options": [
+            "Là tập hợp tất cả các cột có trong một quan hệ.",
+            "Là tập hợp tất cả các dòng dữ liệu hiện có trong một bảng.",
+            "Là tập hợp tất cả các giá trị nguyên tố hợp lệ mà một thuộc tính có thể nhận.",
+            "Là kiểu dữ liệu phức tạp cho phép lưu trữ danh sách các phần tử."
+          ],
+          "answer": "Là tập hợp tất cả các giá trị nguyên tố hợp lệ mà một thuộc tính có thể nhận.",
+          "explanation": "Đáp án đúng định nghĩa miền giá trị như một bộ lọc chứa các giá trị nguyên tố hợp lệ. Các đáp án khác sai vì nhầm lẫn với tập hợp cột, dòng, hoặc vi phạm quy tắc giá trị nguyên tố của mô hình quan hệ."
+        },
+        {
+          "type": "quiz",
+          "question": "Tại sao mô hình quan hệ chuẩn KHÔNG chấp nhận các kiểu dữ liệu như mảng (array) hay danh sách (list) làm miền giá trị?",
+          "options": [
+            "Vì chúng tốn quá nhiều dung lượng lưu trữ.",
+            "Vì miền giá trị bắt buộc phải chứa các giá trị nguyên tố (đơn lẻ, không thể chia cắt).",
+            "Vì các hệ quản trị cơ sở dữ liệu không hỗ trợ các kiểu dữ liệu này.",
+            "Vì chúng làm thay đổi thứ tự các dòng trong bảng."
+          ],
+          "answer": "Vì miền giá trị bắt buộc phải chứa các giá trị nguyên tố (đơn lẻ, không thể chia cắt).",
+          "explanation": "Đáp án đúng giải thích quy tắc cốt lõi: miền giá trị phải là giá trị nguyên tố. Việc cố gắng lưu danh sách (ví dụ: danh sách số điện thoại) vào một ô là lỗi sai phổ biến vi phạm quy tắc này."
+        },
+        {
+          "type": "quiz",
+          "question": "Đặc điểm quan trọng nhất của các dữ liệu nằm trong cùng một thuộc tính (cột) là gì?",
+          "options": [
+            "Phải có giá trị hoàn toàn khác nhau (không được trùng lặp).",
+            "Phải tuân theo một kiểu dữ liệu thống nhất.",
+            "Có thể chứa nhiều kiểu dữ liệu khác nhau tùy theo từng dòng.",
+            "Phải luôn luôn có giá trị, không được phép để rỗng."
+          ],
+          "answer": "Phải tuân theo một kiểu dữ liệu thống nhất.",
+          "explanation": "Đáp án đúng là mọi dữ liệu trong cùng một cột phải có chung một kiểu dữ liệu. Các đáp án khác sai vì cột có thể có giá trị trùng lặp (nếu không phải khóa), có thể rỗng (nếu không có ràng buộc), và không được phép chứa nhiều kiểu dữ liệu lộn xộn."
+        },
+        {
+          "type": "flashcard",
+          "front": "Thuộc tính trong mô hình quan hệ là gì?",
+          "back": "Là các cột trong quan hệ dùng để mô tả đặc điểm của dữ liệu, mỗi thuộc tính đại diện cho một khía cạnh thông tin cụ thể."
+        },
+        {
+          "type": "flashcard",
+          "front": "Giá trị nguyên tố trong miền giá trị nghĩa là gì?",
+          "back": "Là những giá trị đơn lẻ không thể chia cắt nhỏ hơn nữa. Mô hình quan hệ không chấp nhận kiểu dữ liệu phức tạp như mảng hay danh sách."
+        },
+        {
+          "type": "essay",
+          "question": "Phân tích hậu quả của việc vi phạm quy tắc 'giá trị nguyên tố' trong thiết kế cơ sở dữ liệu (ví dụ: lưu trữ danh sách số điện thoại vào chung một ô dữ liệu). Điều này ảnh hưởng thế nào đến việc truy vấn và quản lý dữ liệu?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 8
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t04",
+      "title": "Bộ (Tuple)",
+      "theory": {
+        "definition": "Bộ là một dòng dữ liệu cụ thể bên trong quan hệ, chứa tập hợp các giá trị thể hiện thông tin chi tiết về một thực thể hoặc sự kiện duy nhất.",
+        "explanation": "Nếu quan hệ là một bảng thì bộ chính là các hàng ngang của bảng đó, ngoại trừ hàng tiêu đề chứa tên các cột. Mỗi bộ bao gồm nhiều giá trị, mỗi giá trị tương ứng với một thuộc tính cụ thể của quan hệ. Khi kết hợp lại, các giá trị trong một bộ vẽ nên bức tranh hoàn chỉnh về một đối tượng cụ thể trong thế giới thực tại một thời điểm nhất định.",
+        "examples": [
+          "Trong bảng danh sách nhân viên, dòng dữ liệu <'NV01', 'Nguyễn Văn A', '01/01/1990', 'Hà Nội'> là một bộ thể hiện thông tin của nhân viên Nguyễn Văn A."
+        ],
+        "formulas": [],
+        "diagrams": [],
+        "key_points": [
+          "Bộ tương ứng với các dòng của quan hệ (trừ dòng tiêu đề).",
+          "Mỗi bộ đại diện cho một thực thể hoặc một sự kiện liên quan cụ thể.",
+          "Các giá trị bên trong một bộ phải tuân thủ đúng thứ tự và miền giá trị của các thuộc tính tương ứng."
+        ],
+        "common_mistakes": [],
+        "related_topics": [
+          "t02"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Khái niệm 'Bộ' (Tuple) trong mô hình dữ liệu quan hệ được hiểu là gì?",
+          "options": [
+            "Là hàng tiêu đề chứa tên các cột của bảng.",
+            "Là một dòng dữ liệu cụ thể bên trong quan hệ (ngoại trừ hàng tiêu đề).",
+            "Là tập hợp tất cả các cột của một quan hệ.",
+            "Là một ô dữ liệu duy nhất nằm tại giao điểm của dòng và cột."
+          ],
+          "answer": "Là một dòng dữ liệu cụ thể bên trong quan hệ (ngoại trừ hàng tiêu đề).",
+          "explanation": "Đáp án đúng: Bộ chính là các hàng ngang của bảng chứa dữ liệu thực tế. Các đáp án khác sai vì nhầm lẫn với hàng tiêu đề (lược đồ), cột (thuộc tính), hoặc ô dữ liệu (giá trị)."
+        },
+        {
+          "type": "quiz",
+          "question": "Các giá trị bên trong một bộ bắt buộc phải tuân thủ điều kiện gì?",
+          "options": [
+            "Phải được sắp xếp theo thứ tự bảng chữ cái.",
+            "Phải hoàn toàn khác biệt nhau, không có hai giá trị nào trùng nhau trong cùng một bộ.",
+            "Phải tuân thủ đúng thứ tự và miền giá trị của các thuộc tính tương ứng.",
+            "Phải luôn là các con số toán học."
+          ],
+          "answer": "Phải tuân thủ đúng thứ tự và miền giá trị của các thuộc tính tương ứng.",
+          "explanation": "Đáp án đúng: Mỗi giá trị trong bộ tương ứng với một thuộc tính cụ thể, do đó phải khớp với thứ tự cột và nằm trong miền giá trị cho phép của cột đó. Các đáp án khác đưa ra các điều kiện không tồn tại."
+        },
+        {
+          "type": "flashcard",
+          "front": "Bộ (Tuple) đại diện cho điều gì trong thế giới thực?",
+          "back": "Mỗi bộ đại diện cho một thực thể hoặc một sự kiện liên quan cụ thể tại một thời điểm nhất định."
+        },
+        {
+          "type": "essay",
+          "question": "Giải thích cách các giá trị đơn lẻ bên trong một bộ (tuple) kết hợp lại với nhau để tạo nên ý nghĩa hoàn chỉnh về một đối tượng trong thế giới thực."
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 9
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t05",
+      "title": "Lược đồ quan hệ và Lược đồ CSDL",
+      "theory": {
+        "definition": "Lược đồ quan hệ là cấu trúc định nghĩa một bảng bao gồm tên và tập các thuộc tính, trong khi lược đồ cơ sở dữ liệu là tập hợp toàn bộ các lược đồ quan hệ và các ràng buộc kèm theo.",
+        "explanation": "Lược đồ quan hệ đóng vai trò như một bản thiết kế khung cho dữ liệu, nó chỉ ra bảng đó tên là gì và chứa những cột thông tin nào, nhưng không chứa dữ liệu thực tế. Trạng thái của quan hệ (hay quan hệ thực tế) mới là tập hợp các bộ dữ liệu tuân thủ theo khung thiết kế đó tại một thời điểm cụ thể. Trạng thái này là một tập con của tích Đề-các từ các miền giá trị của các thuộc tính.\n\nKhi mở rộng quy mô lên toàn hệ thống, ta có Lược đồ cơ sở dữ liệu. Đây là bức tranh tổng thể bao gồm nhiều lược đồ quan hệ có liên kết với nhau, cộng thêm các quy tắc, ràng buộc để đảm bảo dữ liệu trong toàn hệ thống luôn hợp lệ và nhất quán.",
+        "examples": [
+          "Lược đồ quan hệ: NHANVIEN(MANV, TENNV, NGAYSINH, DIACHI).",
+          "Lược đồ CSDL công ty bao gồm các lược đồ quan hệ NHANVIEN, PHONGBAN, DEAN và các ràng buộc giữa chúng."
+        ],
+        "formulas": [
+          {
+            "name": "Ký hiệu lược đồ quan hệ",
+            "expression": "R(A1, A2, ..., An) hoặc R(Ω, F)",
+            "note": "R là tên quan hệ, A1..An là các thuộc tính. Ω là tập thuộc tính, F là tập các ràng buộc."
+          },
+          {
+            "name": "Trạng thái quan hệ",
+            "expression": "r(R) = { t1, t2, .., tk | ti = <d1, d2, .., dn>; với di ∈ Di }",
+            "note": "r(R) là tập hợp các bộ (dòng) hiện có tuân theo lược đồ R."
+          },
+          {
+            "name": "Giá trị của thuộc tính trong bộ",
+            "expression": "t.A hoặc t[A]",
+            "note": "Truy xuất giá trị tại thuộc tính A của bộ t."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Lược đồ quan hệ chỉ định nghĩa cấu trúc (tên và các cột), không chứa dữ liệu.",
+          "Trạng thái quan hệ là tập hợp các dòng dữ liệu thực tế tại một thời điểm.",
+          "Lược đồ CSDL là tập hợp các lược đồ quan hệ và các ràng buộc toàn vẹn."
+        ],
+        "common_mistakes": [
+          "Nhầm lẫn giữa 'lược đồ quan hệ' (cấu trúc tĩnh) và 'trạng thái quan hệ' (dữ liệu động thay đổi theo thời gian)."
+        ],
+        "related_topics": [
+          "t02",
+          "t06"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Sự khác biệt cơ bản giữa 'Lược đồ quan hệ' và 'Trạng thái quan hệ' là gì?",
+          "options": [
+            "Lược đồ quan hệ chứa dữ liệu thực tế, còn trạng thái quan hệ chỉ định nghĩa cấu trúc.",
+            "Lược đồ quan hệ là cấu trúc tĩnh (tên và các cột), còn trạng thái quan hệ là tập hợp các dòng dữ liệu thực tế tại một thời điểm.",
+            "Lược đồ quan hệ bao gồm các ràng buộc toàn vẹn, còn trạng thái quan hệ thì không.",
+            "Lược đồ quan hệ và trạng thái quan hệ là hai tên gọi khác nhau của cùng một khái niệm."
+          ],
+          "answer": "Lược đồ quan hệ là cấu trúc tĩnh (tên và các cột), còn trạng thái quan hệ là tập hợp các dòng dữ liệu thực tế tại một thời điểm.",
+          "explanation": "Đáp án đúng phân biệt rõ: Lược đồ là bản thiết kế khung (không chứa dữ liệu), Trạng thái là dữ liệu động thay đổi theo thời gian. Nhầm lẫn giữa hai khái niệm này là một lỗi rất phổ biến."
+        },
+        {
+          "type": "quiz",
+          "question": "Lược đồ cơ sở dữ liệu (Database Schema) được định nghĩa bao gồm những thành phần nào?",
+          "options": [
+            "Chỉ bao gồm tập hợp các dòng dữ liệu của tất cả các bảng.",
+            "Bao gồm một lược đồ quan hệ duy nhất và các miền giá trị của nó.",
+            "Tập hợp toàn bộ các lược đồ quan hệ và các ràng buộc kèm theo.",
+            "Là tập con của tích Đề-các từ các miền giá trị."
+          ],
+          "answer": "Tập hợp toàn bộ các lược đồ quan hệ và các ràng buộc kèm theo.",
+          "explanation": "Đáp án đúng: Lược đồ CSDL là bức tranh tổng thể gồm nhiều lược đồ quan hệ liên kết với nhau cộng thêm các quy tắc, ràng buộc. Các đáp án khác chỉ mô tả một phần hoặc mô tả sai (như tích Đề-các là của trạng thái quan hệ)."
+        },
+        {
+          "type": "quiz",
+          "question": "Ký hiệu r(R) mang ý nghĩa gì trong mô hình quan hệ?",
+          "options": [
+            "Tên của lược đồ quan hệ.",
+            "Tập hợp các thuộc tính của quan hệ.",
+            "Tập hợp các ràng buộc toàn vẹn của quan hệ.",
+            "Trạng thái quan hệ, tức là tập hợp các bộ (dòng) hiện có tuân theo lược đồ R."
+          ],
+          "answer": "Trạng thái quan hệ, tức là tập hợp các bộ (dòng) hiện có tuân theo lược đồ R.",
+          "explanation": "Đáp án đúng dựa trên công thức r(R) = { t1, t2, .., tk }. R là lược đồ, còn r(R) là tập hợp các bộ dữ liệu thực tế tại một thời điểm."
+        },
+        {
+          "type": "flashcard",
+          "front": "Lược đồ quan hệ là gì?",
+          "back": "Là cấu trúc định nghĩa một bảng bao gồm tên và tập các thuộc tính, đóng vai trò như bản thiết kế khung, không chứa dữ liệu thực tế."
+        },
+        {
+          "type": "flashcard",
+          "front": "Trạng thái quan hệ là gì?",
+          "back": "Là tập hợp các bộ dữ liệu (dòng) thực tế tuân thủ theo lược đồ quan hệ tại một thời điểm cụ thể."
+        },
+        {
+          "type": "essay",
+          "question": "So sánh 'Lược đồ quan hệ' và 'Lược đồ cơ sở dữ liệu'. Tại sao khi mở rộng quy mô lên toàn hệ thống, Lược đồ CSDL bắt buộc phải có thêm các ràng buộc toàn vẹn?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 11
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t06",
+      "title": "Ràng buộc toàn vẹn",
+      "theory": {
+        "definition": "Ràng buộc toàn vẹn là những quy tắc và điều kiện bắt buộc phải được thỏa mãn để đảm bảo tính chính xác, hợp lệ và nhất quán của dữ liệu trong cơ sở dữ liệu.",
+        "explanation": "Trong quá trình vận hành cơ sở dữ liệu, dữ liệu liên tục bị thay đổi thông qua các thao tác thêm, sửa, xóa. Để ngăn chặn việc nhập dữ liệu sai lệch hoặc phi logic, các ràng buộc toàn vẹn được định nghĩa ngay từ lúc xây dựng lược đồ cơ sở dữ liệu. Hệ quản trị cơ sở dữ liệu sẽ đóng vai trò như một người gác cổng, tự động kiểm tra các ràng buộc này mỗi khi có yêu cầu thay đổi dữ liệu.\n\nCó nhiều loại ràng buộc khác nhau để bảo vệ dữ liệu ở nhiều cấp độ: ràng buộc miền kiểm soát giá trị của từng ô, ràng buộc khóa đảm bảo tính duy nhất của dòng, ràng buộc toàn vẹn thực thể bảo vệ khóa chính, và ràng buộc toàn vẹn tham chiếu duy trì mối liên kết đúng đắn giữa các bảng.",
+        "examples": [
+          "Quy định điểm số của sinh viên không được nhỏ hơn 0 và lớn hơn 10 là một dạng ràng buộc."
+        ],
+        "formulas": [
+          {
+            "name": "Ràng buộc miền",
+            "expression": "t[A] ∈ Dom(A)",
+            "note": "Giá trị của bộ t tại thuộc tính A bắt buộc phải nằm trong miền giá trị cho phép của A."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Là các quy tắc đảm bảo tính đúng đắn của thể hiện cơ sở dữ liệu.",
+          "Được mô tả và gắn liền với định nghĩa lược đồ quan hệ.",
+          "Hệ thống tự động kiểm tra ràng buộc mỗi khi dữ liệu có sự thay đổi.",
+          "Bao gồm các loại: ràng buộc miền, khóa, toàn vẹn thực thể và tham chiếu."
+        ],
+        "common_mistakes": [],
+        "related_topics": [
+          "t07",
+          "t08",
+          "t09"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Mục đích chính của các ràng buộc toàn vẹn trong cơ sở dữ liệu là gì?",
+          "options": [
+            "Tăng tốc độ truy xuất dữ liệu khi thực hiện các câu lệnh tìm kiếm.",
+            "Đảm bảo tính chính xác, hợp lệ và nhất quán của dữ liệu khi có thao tác thêm, sửa, xóa.",
+            "Mã hóa dữ liệu để bảo mật thông tin người dùng.",
+            "Tự động tạo ra các bảng mới khi dữ liệu vượt quá dung lượng cho phép."
+          ],
+          "answer": "Đảm bảo tính chính xác, hợp lệ và nhất quán của dữ liệu khi có thao tác thêm, sửa, xóa.",
+          "explanation": "Đáp án đúng: Ràng buộc toàn vẹn là các quy tắc ngăn chặn việc nhập dữ liệu sai lệch hoặc phi logic. Các đáp án khác nói về hiệu suất, bảo mật, hoặc quản lý dung lượng, không phải chức năng của ràng buộc toàn vẹn."
+        },
+        {
+          "type": "quiz",
+          "question": "Hệ quản trị cơ sở dữ liệu sẽ kiểm tra các ràng buộc toàn vẹn vào thời điểm nào?",
+          "options": [
+            "Chỉ kiểm tra một lần duy nhất khi mới tạo bảng.",
+            "Chỉ kiểm tra khi người quản trị hệ thống yêu cầu thủ công.",
+            "Tự động kiểm tra mỗi khi có yêu cầu thay đổi dữ liệu (thêm, sửa, xóa).",
+            "Kiểm tra định kỳ vào cuối mỗi ngày làm việc."
+          ],
+          "answer": "Tự động kiểm tra mỗi khi có yêu cầu thay đổi dữ liệu (thêm, sửa, xóa).",
+          "explanation": "Đáp án đúng: Hệ quản trị CSDL đóng vai trò như người gác cổng, tự động kiểm tra các ràng buộc này mỗi khi dữ liệu có sự thay đổi để bảo vệ tính nhất quán."
+        },
+        {
+          "type": "quiz",
+          "question": "Loại ràng buộc nào sau đây dùng để kiểm soát giá trị của từng ô dữ liệu sao cho nó nằm trong tập hợp cho phép?",
+          "options": [
+            "Ràng buộc khóa",
+            "Ràng buộc toàn vẹn thực thể",
+            "Ràng buộc toàn vẹn tham chiếu",
+            "Ràng buộc miền"
+          ],
+          "answer": "Ràng buộc miền",
+          "explanation": "Đáp án đúng là Ràng buộc miền (t[A] ∈ Dom(A)), quy định giá trị phải nằm trong miền giá trị cho phép. Các ràng buộc khác bảo vệ khóa, tính duy nhất hoặc mối liên kết."
+        },
+        {
+          "type": "flashcard",
+          "front": "Ràng buộc toàn vẹn là gì?",
+          "back": "Là những quy tắc và điều kiện bắt buộc phải được thỏa mãn để đảm bảo tính chính xác, hợp lệ và nhất quán của dữ liệu trong CSDL."
+        },
+        {
+          "type": "flashcard",
+          "front": "Kể tên các loại ràng buộc toàn vẹn cơ bản trong mô hình quan hệ.",
+          "back": "Bao gồm: ràng buộc miền, ràng buộc khóa, ràng buộc toàn vẹn thực thể và ràng buộc toàn vẹn tham chiếu."
+        },
+        {
+          "type": "essay",
+          "question": "Phân tích vai trò 'người gác cổng' của Hệ quản trị cơ sở dữ liệu thông qua cơ chế ràng buộc toàn vẹn. Lấy ví dụ minh họa về một trường hợp dữ liệu phi logic sẽ bị hệ thống ngăn chặn."
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 20
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t07",
+      "title": "Siêu khóa (Super key) và Khóa (Key)",
+      "theory": {
+        "definition": "Siêu khóa là một tập thuộc tính có khả năng phân biệt duy nhất các bộ trong quan hệ, trong khi khóa là một siêu khóa tối thiểu không chứa bất kỳ tập con nào cũng là siêu khóa.",
+        "explanation": "Để tìm và phân biệt được một dòng dữ liệu cụ thể giữa hàng ngàn dòng trong bảng, ta cần dựa vào các thuộc tính nhận diện. Bất kỳ tập hợp thuộc tính nào đảm bảo không có hai dòng dữ liệu nào trùng giá trị trên tập thuộc tính đó đều được gọi là siêu khóa. Tuy nhiên, siêu khóa có thể chứa những thuộc tính dư thừa không cần thiết cho việc nhận diện.\n\nKhóa (hay khóa dự tuyển) là phiên bản tinh gọn nhất của siêu khóa. Nó là một siêu khóa mà nếu ta bớt đi bất kỳ một thuộc tính nào trong đó, nó sẽ mất đi khả năng nhận diện duy nhất. Việc xác định khóa phải dựa trên ý nghĩa thực tế và nghiệp vụ của dữ liệu, chứ không chỉ dựa vào dữ liệu ngẫu nhiên đang có trong bảng tại một thời điểm. Một bảng có thể có nhiều tập thuộc tính thỏa mãn điều kiện làm khóa.",
+        "examples": [
+          "Trong bảng SinhVien, tập {Mã SV, Họ tên} là một siêu khóa vì nó giúp phân biệt các sinh viên. Tuy nhiên, chỉ riêng {Mã SV} đã đủ để phân biệt, nên {Mã SV} là khóa, còn {Mã SV, Họ tên} không phải là khóa (chỉ là siêu khóa)."
+        ],
+        "formulas": [
+          {
+            "name": "Điều kiện Siêu khóa",
+            "expression": "∀ t1 ≠ t2 ∈ r(R), ∃ SK sao cho t1[SK] ≠ t2[SK]",
+            "note": "Với mọi cặp bộ khác nhau trong quan hệ, giá trị của chúng tại tập thuộc tính siêu khóa SK phải khác nhau."
+          },
+          {
+            "name": "Điều kiện Khóa",
+            "expression": "K ⊆ R, K ≠ ∅; K là siêu khóa VÀ ∀ K' ⊂ K, K' ≠ K thì K' không phải là siêu khóa",
+            "note": "K là một siêu khóa và không có tập con thực sự nào của K cũng là siêu khóa (tính tối thiểu)."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Giá trị của khóa dùng để nhận biết duy nhất một bộ trong quan hệ.",
+          "Khóa là đặc trưng của lược đồ, phụ thuộc vào ý nghĩa dữ liệu chứ không phụ thuộc vào thể hiện dữ liệu hiện tại.",
+          "Mọi khóa đều là siêu khóa, nhưng siêu khóa chưa chắc là khóa.",
+          "Khóa chính là siêu khóa tối thiểu.",
+          "Một lược đồ quan hệ có thể có nhiều khóa, gọi là các khóa dự tuyển."
+        ],
+        "common_mistakes": [
+          "Xác định khóa chỉ bằng cách nhìn vào dữ liệu hiện tại của bảng (ví dụ thấy cột Tên hiện tại không có ai trùng nhau nên chọn làm khóa), dẫn đến sai lệch khi có dữ liệu mới thêm vào."
+        ],
+        "related_topics": [
+          "t08"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Định nghĩa nào sau đây mô tả chính xác nhất về 'Khóa' (Key) trong mô hình quan hệ?",
+          "options": [
+            "Là bất kỳ tập thuộc tính nào có khả năng phân biệt duy nhất các bộ trong quan hệ.",
+            "Là một siêu khóa tối thiểu không chứa bất kỳ tập con nào cũng là siêu khóa.",
+            "Là thuộc tính đầu tiên xuất hiện trong lược đồ quan hệ.",
+            "Là tập hợp tất cả các thuộc tính của một quan hệ."
+          ],
+          "answer": "Là một siêu khóa tối thiểu không chứa bất kỳ tập con nào cũng là siêu khóa.",
+          "explanation": "Đáp án đúng nhấn mạnh tính 'tối thiểu' của khóa. Đáp án 'bất kỳ tập thuộc tính nào phân biệt duy nhất' là định nghĩa của Siêu khóa (Super key), không phải Khóa. Khóa là phiên bản tinh gọn nhất của siêu khóa."
+        },
+        {
+          "type": "quiz",
+          "question": "Mối quan hệ giữa Siêu khóa (Super key) và Khóa (Key) là gì?",
+          "options": [
+            "Mọi khóa đều là siêu khóa, nhưng siêu khóa chưa chắc là khóa.",
+            "Mọi siêu khóa đều là khóa, nhưng khóa chưa chắc là siêu khóa.",
+            "Siêu khóa và khóa là hai khái niệm hoàn toàn độc lập, không liên quan đến nhau.",
+            "Khóa là tập hợp chứa nhiều thuộc tính hơn siêu khóa."
+          ],
+          "answer": "Mọi khóa đều là siêu khóa, nhưng siêu khóa chưa chắc là khóa.",
+          "explanation": "Đáp án đúng: Khóa là một loại siêu khóa đặc biệt (siêu khóa tối thiểu). Do đó mọi khóa đều thỏa mãn tính chất của siêu khóa, nhưng siêu khóa có thể chứa thuộc tính dư thừa nên chưa chắc đã là khóa."
+        },
+        {
+          "type": "quiz",
+          "question": "Một sai lầm phổ biến khi xác định khóa cho một bảng dữ liệu là gì?",
+          "options": [
+            "Dựa vào ý nghĩa thực tế và nghiệp vụ của dữ liệu.",
+            "Cho rằng một bảng có thể có nhiều khóa dự tuyển.",
+            "Xác định khóa chỉ bằng cách nhìn vào dữ liệu ngẫu nhiên đang có trong bảng tại một thời điểm.",
+            "Chọn một siêu khóa tối thiểu làm khóa."
+          ],
+          "answer": "Xác định khóa chỉ bằng cách nhìn vào dữ liệu ngẫu nhiên đang có trong bảng tại một thời điểm.",
+          "explanation": "Đáp án đúng chỉ ra lỗi sai: Việc xác định khóa phải dựa trên ý nghĩa nghiệp vụ. Nếu chỉ nhìn dữ liệu hiện tại (ví dụ cột Tên hiện không trùng ai nên chọn làm khóa), hệ thống sẽ lỗi khi có người trùng tên được thêm vào sau này."
+        },
+        {
+          "type": "quiz",
+          "question": "Khái niệm 'Khóa dự tuyển' (Candidate key) có nghĩa là gì?",
+          "options": [
+            "Là khóa được tạo ra tự động bởi hệ thống.",
+            "Là các siêu khóa có chứa thuộc tính dư thừa.",
+            "Là tập hợp các khóa ngoại tham chiếu đến bảng khác.",
+            "Là các tập thuộc tính khác nhau trong cùng một bảng đều thỏa mãn điều kiện làm khóa."
+          ],
+          "answer": "Là các tập thuộc tính khác nhau trong cùng một bảng đều thỏa mãn điều kiện làm khóa.",
+          "explanation": "Đáp án đúng: Một lược đồ quan hệ có thể có nhiều khóa (nhiều cách tinh gọn để nhận diện duy nhất), tất cả chúng được gọi chung là các khóa dự tuyển."
+        },
+        {
+          "type": "flashcard",
+          "front": "Siêu khóa (Super key) là gì?",
+          "back": "Là một tập thuộc tính có khả năng phân biệt duy nhất các bộ (dòng) trong quan hệ. Nó có thể chứa các thuộc tính dư thừa."
+        },
+        {
+          "type": "flashcard",
+          "front": "Khóa (Key) khác với Siêu khóa (Super key) ở điểm cốt lõi nào?",
+          "back": "Khóa là một siêu khóa TỐI THIỂU. Nếu bớt đi bất kỳ thuộc tính nào trong khóa, nó sẽ mất đi khả năng nhận diện duy nhất."
+        },
+        {
+          "type": "essay",
+          "question": "Phân tích lý do tại sao việc xác định Khóa phải dựa trên ý nghĩa thực tế và nghiệp vụ của dữ liệu, thay vì chỉ dựa vào trạng thái dữ liệu hiện tại của bảng. Cho ví dụ minh họa về hậu quả của việc xác định khóa sai cách."
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 21
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t08",
+      "title": "Khóa chính và Ràng buộc toàn vẹn thực thể",
+      "theory": {
+        "definition": "Khóa chính là một khóa dự tuyển được chọn làm định danh chính cho quan hệ, và nó phải tuân thủ ràng buộc toàn vẹn thực thể là luôn phải có giá trị xác định (không được rỗng).",
+        "explanation": "Khi một bảng có nhiều khóa dự tuyển (nhiều cách để nhận diện duy nhất một dòng), người thiết kế cơ sở dữ liệu sẽ chọn ra một khóa phù hợp nhất để làm khóa chính (Primary Key). Tiêu chí lựa chọn thường ưu tiên những khóa có ít thuộc tính nhất hoặc có kiểu dữ liệu đơn giản để tối ưu hiệu suất.\n\nRàng buộc toàn vẹn thực thể là một quy tắc sống còn đi kèm với khóa chính. Nó quy định rằng không có bất kỳ thành phần nào của khóa chính được phép mang giá trị rỗng (null). Lý do là vì khóa chính dùng để xác định sự tồn tại và phân biệt các thực thể; nếu khóa chính bị rỗng, hệ thống sẽ không thể nhận diện được thực thể đó là ai hay cái gì.",
+        "examples": [
+          "Bảng NHANVIEN có 2 khóa dự tuyển là MANV và tập (HONV, TENNV, NS). Ta chọn MANV làm khóa chính vì nó ngắn gọn và chỉ có 1 thuộc tính."
+        ],
+        "formulas": [],
+        "diagrams": [],
+        "key_points": [
+          "Khóa chính được chọn từ một trong các khóa dự tuyển của quan hệ.",
+          "Thường ưu tiên chọn khóa có ít thuộc tính nhất làm khóa chính.",
+          "Ràng buộc toàn vẹn thực thể bắt buộc khóa chính luôn phải có giá trị xác định.",
+          "Khóa chính không bao giờ được phép chứa giá trị null."
+        ],
+        "common_mistakes": [
+          "Cho phép người dùng để trống trường dữ liệu được thiết lập làm khóa chính khi nhập liệu."
+        ],
+        "related_topics": [
+          "t07",
+          "t09"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Tiêu chí nào thường được ưu tiên khi lựa chọn Khóa chính (Primary Key) từ các khóa dự tuyển?",
+          "options": [
+            "Chọn khóa có chứa nhiều thuộc tính nhất để đảm bảo độ chính xác.",
+            "Chọn khóa có kiểu dữ liệu phức tạp nhất.",
+            "Chọn khóa có ít thuộc tính nhất hoặc có kiểu dữ liệu đơn giản để tối ưu hiệu suất.",
+            "Chọn khóa có chứa thuộc tính mang giá trị rỗng (null)."
+          ],
+          "answer": "Chọn khóa có ít thuộc tính nhất hoặc có kiểu dữ liệu đơn giản để tối ưu hiệu suất.",
+          "explanation": "Đáp án đúng: Để tối ưu hiệu suất, người thiết kế thường chọn khóa ngắn gọn, ít thuộc tính và kiểu dữ liệu đơn giản làm khóa chính. Các đáp án khác đi ngược lại nguyên tắc thiết kế tối ưu."
+        },
+        {
+          "type": "quiz",
+          "question": "Ràng buộc toàn vẹn thực thể quy định điều gì đối với Khóa chính?",
+          "options": [
+            "Khóa chính phải luôn là kiểu dữ liệu số nguyên.",
+            "Không có bất kỳ thành phần nào của khóa chính được phép mang giá trị rỗng (null).",
+            "Khóa chính có thể mang giá trị rỗng nếu thực thể đó chưa được xác định đầy đủ thông tin.",
+            "Khóa chính phải tham chiếu đến một khóa chính của bảng khác."
+          ],
+          "answer": "Không có bất kỳ thành phần nào của khóa chính được phép mang giá trị rỗng (null).",
+          "explanation": "Đáp án đúng: Ràng buộc toàn vẹn thực thể là quy tắc sống còn bắt buộc khóa chính luôn phải có giá trị xác định. Cho phép khóa chính rỗng là một sai lầm nghiêm trọng vì hệ thống sẽ không thể nhận diện được thực thể."
+        },
+        {
+          "type": "quiz",
+          "question": "Tại sao Khóa chính không bao giờ được phép chứa giá trị null?",
+          "options": [
+            "Vì giá trị null chiếm nhiều dung lượng lưu trữ hơn các giá trị bình thường.",
+            "Vì hệ quản trị CSDL không thể hiển thị giá trị null trên màn hình.",
+            "Vì khóa chính dùng để xác định sự tồn tại và phân biệt các thực thể; nếu rỗng, hệ thống không thể nhận diện được thực thể đó.",
+            "Vì giá trị null sẽ làm thay đổi miền giá trị của các thuộc tính khác trong bảng."
+          ],
+          "answer": "Vì khóa chính dùng để xác định sự tồn tại và phân biệt các thực thể; nếu rỗng, hệ thống không thể nhận diện được thực thể đó.",
+          "explanation": "Đáp án đúng giải thích bản chất của ràng buộc toàn vẹn thực thể: chức năng của khóa chính là định danh, một định danh không tồn tại (null) thì không thể dùng để phân biệt."
+        },
+        {
+          "type": "flashcard",
+          "front": "Khóa chính (Primary Key) là gì?",
+          "back": "Là một khóa dự tuyển được chọn làm định danh chính cho quan hệ, thường ưu tiên khóa có ít thuộc tính và kiểu dữ liệu đơn giản."
+        },
+        {
+          "type": "flashcard",
+          "front": "Nội dung của Ràng buộc toàn vẹn thực thể là gì?",
+          "back": "Quy định rằng không có bất kỳ thành phần nào của khóa chính được phép mang giá trị rỗng (null)."
+        },
+        {
+          "type": "essay",
+          "question": "Trong một bảng có nhiều khóa dự tuyển, làm thế nào để quyết định chọn một khóa làm Khóa chính? Phân tích mối liên hệ chặt chẽ giữa Khóa chính và Ràng buộc toàn vẹn thực thể."
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 23
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t09",
+      "title": "Khóa ngoại (Foreign Key) và Ràng buộc tham chiếu",
+      "theory": {
+        "definition": "Khóa ngoại là một tập thuộc tính trong một quan hệ dùng để tham chiếu đến khóa chính của một quan hệ khác, nhằm thiết lập và bảo vệ mối liên kết giữa các dữ liệu.",
+        "explanation": "Khóa ngoại là cơ chế cốt lõi để tạo ra các mối quan hệ (relationship) giữa các bảng trong cơ sở dữ liệu. Ràng buộc tham chiếu đi kèm với khóa ngoại quy định một nguyên tắc chặt chẽ: 'Bộ được tham chiếu phải tồn tại trước'. Nghĩa là, nếu bảng A có một khóa ngoại trỏ đến khóa chính của bảng B, thì mọi giá trị nhập vào khóa ngoại của bảng A đều phải tìm thấy tương ứng trong khóa chính của bảng B, hoặc giá trị đó phải hoàn toàn rỗng (null).\n\nĐể sự tham chiếu này hợp lệ, các thuộc tính cấu thành khóa ngoại phải có cùng miền giá trị với các thuộc tính của khóa chính mà nó trỏ tới. Một điểm thú vị là một thuộc tính có thể đóng vai trò kép: vừa là một phần của khóa chính, vừa là khóa ngoại. Hơn nữa, khóa ngoại có thể tham chiếu ngược lại chính khóa chính của bảng chứa nó (quan hệ đệ quy), và một bảng có thể có nhiều khóa ngoại cùng trỏ về một khóa chính.",
+        "examples": [
+          "Trong bảng NHANVIEN có cột PHG (Mã phòng ban). Cột PHG này là khóa ngoại tham chiếu đến khóa chính MAPHG của bảng PHONGBAN. Điều này đảm bảo không thể gán một nhân viên vào một phòng ban không tồn tại."
+        ],
+        "formulas": [
+          {
+            "name": "Điều kiện Khóa ngoại",
+            "expression": "t1[FK] = t2[PK] hoặc t1[FK] = ∅",
+            "note": "Giá trị khóa ngoại FK của bộ t1 trong bảng R1 phải bằng giá trị khóa chính PK của một bộ t2 nào đó trong bảng R2, hoặc phải mang giá trị rỗng."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Khóa ngoại dùng để tham chiếu đến khóa chính của một quan hệ (có thể là chính nó).",
+          "Tập thuộc tính khóa ngoại phải có cùng miền giá trị với tập thuộc tính khóa chính được tham chiếu.",
+          "Giá trị của khóa ngoại phải tồn tại trong khóa chính được tham chiếu, hoặc là giá trị rỗng.",
+          "Một thuộc tính có thể vừa tham gia vào khóa chính, vừa tham gia vào khóa ngoại.",
+          "Ràng buộc tham chiếu chính là ràng buộc khóa ngoại."
+        ],
+        "common_mistakes": [
+          "Cố gắng xóa một dòng dữ liệu ở bảng cha (bảng chứa khóa chính) trong khi mã của nó vẫn đang được sử dụng ở bảng con (bảng chứa khóa ngoại), gây lỗi vi phạm ràng buộc tham chiếu."
+        ],
+        "related_topics": [
+          "t08"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Chức năng chính của Khóa ngoại (Foreign Key) là gì?",
+          "options": [
+            "Đảm bảo không có hai dòng nào trong cùng một bảng bị trùng lặp dữ liệu.",
+            "Tham chiếu đến khóa chính của một quan hệ khác (hoặc chính nó) để thiết lập và bảo vệ mối liên kết.",
+            "Ngăn chặn việc nhập các giá trị rỗng (null) vào trong bảng.",
+            "Tự động tạo ra các giá trị định danh duy nhất cho mỗi dòng dữ liệu mới."
+          ],
+          "answer": "Tham chiếu đến khóa chính của một quan hệ khác (hoặc chính nó) để thiết lập và bảo vệ mối liên kết.",
+          "explanation": "Đáp án đúng: Khóa ngoại là cơ chế cốt lõi để tạo ra các mối quan hệ (relationship) giữa các bảng. Các đáp án khác mô tả chức năng của khóa chính, ràng buộc thực thể hoặc tính năng auto-increment."
+        },
+        {
+          "type": "quiz",
+          "question": "Theo ràng buộc tham chiếu, giá trị nhập vào khóa ngoại của bảng A (trỏ đến khóa chính bảng B) phải thỏa mãn điều kiện gì?",
+          "options": [
+            "Phải là một giá trị hoàn toàn mới, chưa từng xuất hiện ở bảng B.",
+            "Phải tìm thấy tương ứng trong khóa chính của bảng B, hoặc giá trị đó phải hoàn toàn rỗng (null).",
+            "Bắt buộc phải có giá trị xác định, không bao giờ được phép rỗng (null).",
+            "Phải lớn hơn tất cả các giá trị hiện có trong khóa chính của bảng B."
+          ],
+          "answer": "Phải tìm thấy tương ứng trong khóa chính của bảng B, hoặc giá trị đó phải hoàn toàn rỗng (null).",
+          "explanation": "Đáp án đúng phản ánh nguyên tắc 'Bộ được tham chiếu phải tồn tại trước' (t1[FK] = t2[PK] hoặc t1[FK] = ∅). Khóa ngoại có thể rỗng, khác với khóa chính."
+        },
+        {
+          "type": "quiz",
+          "question": "Phát biểu nào sau đây là SAI về Khóa ngoại?",
+          "options": [
+            "Tập thuộc tính khóa ngoại phải có cùng miền giá trị với tập thuộc tính khóa chính được tham chiếu.",
+            "Một thuộc tính có thể vừa đóng vai trò là khóa chính, vừa là khóa ngoại.",
+            "Khóa ngoại có thể tham chiếu ngược lại chính khóa chính của bảng chứa nó.",
+            "Một bảng chỉ được phép có tối đa một khóa ngoại."
+          ],
+          "answer": "Một bảng chỉ được phép có tối đa một khóa ngoại.",
+          "explanation": "Đáp án sai (cần chọn) là 'Một bảng chỉ được phép có tối đa một khóa ngoại'. Thực tế, một bảng có thể có nhiều khóa ngoại cùng trỏ về một hoặc nhiều bảng khác nhau."
+        },
+        {
+          "type": "quiz",
+          "question": "Hành động nào sau đây thường gây ra lỗi vi phạm ràng buộc tham chiếu?",
+          "options": [
+            "Thêm một dòng dữ liệu mới vào bảng con với giá trị khóa ngoại là null.",
+            "Xóa một dòng dữ liệu ở bảng cha trong khi mã của nó vẫn đang được sử dụng ở bảng con.",
+            "Cập nhật một thuộc tính không phải là khóa ở bảng cha.",
+            "Thêm một dòng dữ liệu mới vào bảng cha."
+          ],
+          "answer": "Xóa một dòng dữ liệu ở bảng cha trong khi mã của nó vẫn đang được sử dụng ở bảng con.",
+          "explanation": "Đáp án đúng: Đây là lỗi common_mistake phổ biến. Xóa dòng ở bảng cha (chứa PK) sẽ làm cho các dòng ở bảng con (chứa FK) bị 'mồ côi', vi phạm nguyên tắc 'bộ được tham chiếu phải tồn tại'."
+        },
+        {
+          "type": "flashcard",
+          "front": "Khóa ngoại (Foreign Key) là gì?",
+          "back": "Là một tập thuộc tính trong một quan hệ dùng để tham chiếu đến khóa chính của một quan hệ khác (hoặc chính nó), nhằm thiết lập mối liên kết."
+        },
+        {
+          "type": "flashcard",
+          "front": "Ràng buộc tham chiếu (Ràng buộc khóa ngoại) quy định nguyên tắc cốt lõi nào?",
+          "back": "Nguyên tắc 'Bộ được tham chiếu phải tồn tại trước': Giá trị của khóa ngoại phải tồn tại trong khóa chính được tham chiếu, hoặc phải là giá trị rỗng."
+        },
+        {
+          "type": "essay",
+          "question": "Giải thích cơ chế hoạt động của Khóa ngoại và Ràng buộc tham chiếu trong việc bảo vệ tính toàn vẹn của dữ liệu. Tại sao một thuộc tính lại có thể đóng vai trò kép: vừa là khóa chính, vừa là khóa ngoại?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 24
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t10",
+      "title": "Chuyển đổi Lược đồ ER sang Lược đồ Quan hệ",
+      "theory": {
+        "definition": "Là tập hợp các quy tắc chuẩn mực dùng để biến đổi các thành phần khái niệm trong mô hình Thực thể - Liên kết (ER) thành các bảng, cột và khóa trong mô hình dữ liệu quan hệ.",
+        "explanation": "Quá trình thiết kế cơ sở dữ liệu thường bắt đầu bằng mô hình ER trực quan, sau đó mới chuyển sang mô hình quan hệ để cài đặt. Các quy tắc chuyển đổi bao gồm:\n\n1. Thực thể: Mỗi thực thể mạnh trở thành một bảng riêng, các thuộc tính đơn trở thành cột. Đối với thực thể yếu, bảng tạo ra phải mượn thêm khóa chính của thực thể chủ ghép với khóa cục bộ để làm khóa chính.\n2. Thuộc tính đa trị: Không thể lưu trực tiếp vào một cột, nên phải tách thành một bảng riêng. Bảng này chứa thuộc tính đa trị đó và khóa ngoại trỏ về bảng gốc; khóa chính là sự kết hợp của cả hai.\n3. Mối liên kết: \n- Liên kết 1:1: Có thể gộp chung vào một bảng nếu tham gia toàn bộ, hoặc đưa khóa chính của bảng này sang bảng kia làm khóa ngoại.\n- Liên kết 1:N: Đưa khóa chính của bảng bên phía '1' sang bảng bên phía 'N' để làm khóa ngoại.\n- Liên kết M:N và Liên kết đa ngôi (n>2): Bắt buộc phải tạo ra một bảng trung gian mới. Bảng này chứa các khóa ngoại trỏ về các thực thể tham gia, và khóa chính của bảng mới này chính là sự kết hợp của các khóa ngoại đó.",
+        "examples": [
+          "Thực thể NHANVIEN có thuộc tính đa trị là BANGCAP. Khi chuyển đổi, ta tạo bảng NHANVIEN(MANV, TENNV...) và một bảng mới BANGCAP(MANV, BANGCAP) với khóa chính là (MANV, BANGCAP)."
+        ],
+        "formulas": [],
+        "diagrams": [
+          {
+            "id": "d01",
+            "title": "Tóm tắt quy tắc chuyển đổi ER sang Quan hệ",
+            "type": "mermaid",
+            "content": "flowchart TD\n A[Thành phần ER] --> B{Loại thành phần}\n B -->|Thực thể mạnh| C[Tạo Quan hệ mới]\n B -->|Thực thể yếu| D[Quan hệ mới + Khóa ngoại từ Thực thể chủ]\n B -->|Thuộc tính đa trị| E[Tạo Quan hệ mới]\n B -->|Liên kết 1:1| F[Gộp bảng hoặc thêm Khóa ngoại]\n B -->|Liên kết 1:N| G[Thêm Khóa ngoại vào bên N]\n B -->|Liên kết M:N / Đa ngôi| H[Tạo Quan hệ mới chứa các Khóa ngoại]",
+            "source_page": 29,
+            "caption": "Sơ đồ luồng thể hiện cách xử lý từng loại thành phần của mô hình ER khi chuyển sang mô hình quan hệ."
+          }
+        ],
+        "key_points": [
+          "Thực thể mạnh chuyển thành quan hệ với các thuộc tính đơn.",
+          "Thực thể yếu cần khóa của thực thể chủ để tạo thành khóa chính.",
+          "Thuộc tính đa trị luôn được tách thành một quan hệ riêng.",
+          "Liên kết 1:N được giải quyết bằng cách thêm khóa ngoại vào bên 'Nhiều'.",
+          "Liên kết M:N và liên kết đa ngôi luôn tạo ra một quan hệ mới chứa các khóa ngoại."
+        ],
+        "common_mistakes": [
+          "Cố gắng nhồi nhét thuộc tính đa trị vào một cột duy nhất bằng cách phân cách bằng dấu phẩy, thay vì tách thành bảng riêng theo đúng quy tắc.",
+          "Đặt sai vị trí khóa ngoại trong mối liên kết 1:N (đặt khóa ngoại ở bên '1' thay vì bên 'N')."
+        ],
+        "related_topics": [
+          "t09"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Khi chuyển đổi mô hình ER sang mô hình quan hệ, 'Thuộc tính đa trị' được xử lý như thế nào?",
+          "options": [
+            "Lưu trực tiếp vào một cột bằng cách phân cách các giá trị bằng dấu phẩy.",
+            "Chỉ giữ lại một giá trị duy nhất và bỏ qua các giá trị còn lại.",
+            "Tách thành một bảng riêng chứa thuộc tính đó và khóa ngoại trỏ về bảng gốc.",
+            "Gộp chung vào bảng của thực thể chủ và tạo thêm nhiều cột tương ứng với số lượng giá trị."
+          ],
+          "answer": "Tách thành một bảng riêng chứa thuộc tính đó và khóa ngoại trỏ về bảng gốc.",
+          "explanation": "Đáp án đúng: Thuộc tính đa trị bắt buộc phải tách thành bảng riêng. Việc cố gắng nhồi nhét bằng dấu phẩy (đáp án 1) là một sai lầm phổ biến vi phạm quy tắc giá trị nguyên tố."
+        },
+        {
+          "type": "quiz",
+          "question": "Trong mối liên kết 1:N, khóa ngoại sẽ được đặt ở đâu khi chuyển sang mô hình quan hệ?",
+          "options": [
+            "Đưa khóa chính của bảng bên phía 'N' sang bảng bên phía '1' làm khóa ngoại.",
+            "Đưa khóa chính của bảng bên phía '1' sang bảng bên phía 'N' làm khóa ngoại.",
+            "Tạo một bảng trung gian mới chứa khóa ngoại của cả hai bảng.",
+            "Không cần sử dụng khóa ngoại cho mối liên kết 1:N."
+          ],
+          "answer": "Đưa khóa chính của bảng bên phía '1' sang bảng bên phía 'N' làm khóa ngoại.",
+          "explanation": "Đáp án đúng: Khóa ngoại luôn được thêm vào bên 'Nhiều' (N). Đặt khóa ngoại ở bên '1' là một lỗi sai vị trí rất phổ biến."
+        },
+        {
+          "type": "quiz",
+          "question": "Loại mối liên kết nào BẮT BUỘC phải tạo ra một bảng trung gian mới khi chuyển đổi sang mô hình quan hệ?",
+          "options": [
+            "Chỉ liên kết 1:1",
+            "Chỉ liên kết 1:N",
+            "Liên kết M:N và Liên kết đa ngôi (n>2)",
+            "Tất cả các loại liên kết đều phải tạo bảng trung gian"
+          ],
+          "answer": "Liên kết M:N và Liên kết đa ngôi (n>2)",
+          "explanation": "Đáp án đúng: Liên kết M:N và đa ngôi không thể giải quyết bằng cách thêm khóa ngoại vào các bảng có sẵn, mà bắt buộc tạo bảng mới chứa các khóa ngoại trỏ về các thực thể tham gia."
+        },
+        {
+          "type": "quiz",
+          "question": "Khóa chính của một 'Thực thể yếu' khi chuyển sang mô hình quan hệ được xác định như thế nào?",
+          "options": [
+            "Sử dụng chính khóa cục bộ của thực thể yếu làm khóa chính.",
+            "Tự động tạo ra một mã định danh mới (ID) làm khóa chính.",
+            "Mượn khóa chính của thực thể chủ ghép với khóa cục bộ để làm khóa chính.",
+            "Thực thể yếu không cần có khóa chính."
+          ],
+          "answer": "Mượn khóa chính của thực thể chủ ghép với khóa cục bộ để làm khóa chính.",
+          "explanation": "Đáp án đúng: Thực thể yếu không thể tự định danh, nên bảng tạo ra phải mượn khóa chính của thực thể chủ ghép với khóa cục bộ của nó để tạo thành khóa chính hoàn chỉnh."
+        },
+        {
+          "type": "flashcard",
+          "front": "Quy tắc chuyển đổi Thực thể yếu từ ER sang mô hình quan hệ là gì?",
+          "back": "Tạo bảng mới, mượn khóa chính của thực thể chủ ghép với khóa cục bộ của thực thể yếu để làm khóa chính."
+        },
+        {
+          "type": "flashcard",
+          "front": "Làm thế nào để chuyển đổi Liên kết M:N sang mô hình quan hệ?",
+          "back": "Bắt buộc tạo ra một bảng trung gian mới. Bảng này chứa các khóa ngoại trỏ về các thực thể tham gia, khóa chính là sự kết hợp của các khóa ngoại đó."
+        },
+        {
+          "type": "essay",
+          "question": "So sánh chiến lược xử lý khóa ngoại khi chuyển đổi mối liên kết 1:N và mối liên kết M:N từ mô hình ER sang mô hình quan hệ. Tại sao liên kết M:N lại bắt buộc phải sinh ra một bảng mới?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 29
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    }
+  ]
+}

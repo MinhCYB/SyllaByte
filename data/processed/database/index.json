@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "subject": "Cơ sở dữ liệu",
+    "subject_id": "database",
+    "updated_at": "2026-05-29"
+  },
+  "chapters": [
+    {
+      "id": "chap_3_1",
+      "title": "Chương 3: Mô hình dữ liệu quan hệ (Phần 1)",
+      "file": "chap_3_1.json",
+      "topic_count": 10,
+      "question_count": 61
+    },
+    {
+      "id": "chap_3_2",
+      "title": "Chương 3: Mô hình và dữ liệu quan hệ (phần 2)",
+      "file": "chap_3_2.json",
+      "topic_count": 12,
+      "question_count": 75
+    }
+  ]
+}

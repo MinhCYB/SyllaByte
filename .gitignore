@@ -1,6 +1,6 @@
 # Data
 data/raw/*
-data/processed/*
+# data/processed/*
 
 # Giữ lại cấu trúc thư mục
 !data/raw/.gitkeep

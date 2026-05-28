@@ -1,0 +1,1183 @@
+{
+  "meta": {
+    "subject": "Cơ sở dữ liệu",
+    "chapter_id": "chap_3_2",
+    "title": "Chương 3: Mô hình và dữ liệu quan hệ (phần 2)",
+    "updated_at": "2026-05-29"
+  },
+  "topics": [
+    {
+      "id": "t01",
+      "title": "Các thao tác cập nhật dữ liệu",
+      "theory": {
+        "definition": "Các thao tác cập nhật là những lệnh làm thay đổi trạng thái dữ liệu của cơ sở dữ liệu, bao gồm thêm mới, xóa bỏ và sửa đổi các bộ dữ liệu.",
+        "explanation": "Trong quá trình vận hành cơ sở dữ liệu, dữ liệu không hề tĩnh mà liên tục thay đổi thông qua ba thao tác cơ bản: Thêm (Insert) để đưa một dòng dữ liệu mới vào bảng, Xóa (Delete) để loại bỏ các dòng thỏa mãn một điều kiện nhất định, và Sửa (Modify) để cập nhật giá trị mới cho các thuộc tính của những dòng đang tồn tại. Khi thực hiện bất kỳ thao tác nào trong số này, hệ quản trị cơ sở dữ liệu phải tự động kiểm tra xem sự thay đổi đó có vi phạm các ràng buộc toàn vẹn (như ràng buộc miền, ràng buộc khóa, ràng buộc tham chiếu) hay không. Nếu phát hiện vi phạm, hệ thống có thể từ chối thực hiện thao tác hoặc tự động tiến hành các bước xử lý phụ trợ như xóa lan truyền hoặc gán giá trị rỗng (null) để duy trì tính nhất quán của dữ liệu.",
+        "examples": [
+          "Thêm một nhân viên mới vào bảng NHANVIEN.",
+          "Xóa tất cả các sinh viên có mã là 'T1' khỏi bảng SINHVIEN.",
+          "Tăng hệ số lương thêm 10% cho toàn bộ nhân viên trong công ty."
+        ],
+        "formulas": [
+          {
+            "name": "Cú pháp Thêm",
+            "expression": "INSERT(R; t)",
+            "note": "Thêm một bộ t mới vào quan hệ R."
+          },
+          {
+            "name": "Cú pháp Xóa",
+            "expression": "DELETE(R; f)",
+            "note": "Xóa các bộ thỏa mãn biểu thức điều kiện f khỏi quan hệ R."
+          },
+          {
+            "name": "Cú pháp Sửa",
+            "expression": "MODIFY(R; f; <ai = vi, ...>)",
+            "note": "Sửa giá trị của thuộc tính ai thành vi cho các bộ thỏa mãn điều kiện f trong quan hệ R."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Bao gồm ba thao tác chính: Thêm (Insert), Xóa (Delete) và Sửa (Modify).",
+          "Mọi thao tác cập nhật đều có nguy cơ vi phạm các ràng buộc toàn vẹn của cơ sở dữ liệu.",
+          "Hệ thống sẽ xử lý vi phạm bằng cách loại bỏ thao tác hoặc thực hiện các hành động bù trừ (như xóa lan truyền)."
+        ],
+        "common_mistakes": [
+          "Người học thường quên rằng việc xóa một bản ghi ở bảng cha có thể bị từ chối nếu bản ghi đó đang được tham chiếu bởi một khóa ngoại ở bảng con."
+        ],
+        "related_topics": []
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Hệ quản trị cơ sở dữ liệu sẽ làm gì khi phát hiện một thao tác cập nhật vi phạm các ràng buộc toàn vẹn?",
+          "options": [
+            "Tự động sửa đổi dữ liệu của người dùng để phù hợp với ràng buộc.",
+            "Bỏ qua ràng buộc toàn vẹn và tiếp tục thực hiện thao tác cập nhật.",
+            "Từ chối thực hiện thao tác hoặc tự động tiến hành các bước xử lý phụ trợ như xóa lan truyền.",
+            "Xóa toàn bộ bảng dữ liệu để bảo vệ tính nhất quán của hệ thống."
+          ],
+          "answer": "Từ chối thực hiện thao tác hoặc tự động tiến hành các bước xử lý phụ trợ như xóa lan truyền.",
+          "explanation": "Đáp án đúng là hệ thống có thể từ chối thao tác hoặc thực hiện hành động bù trừ (như xóa lan truyền, gán null). Các đáp án khác sai vì hệ thống không tự ý sửa dữ liệu người dùng thành giá trị ngẫu nhiên, không bao giờ bỏ qua ràng buộc, và việc xóa toàn bộ bảng là hành động phá hoại không hợp lý."
+        },
+        {
+          "type": "quiz",
+          "question": "Một lỗi phổ biến người học thường mắc phải khi thực hiện thao tác xóa (Delete) là gì?",
+          "options": [
+            "Quên chỉ định điều kiện xóa khiến toàn bộ dữ liệu trong cơ sở dữ liệu bị mất.",
+            "Quên rằng việc xóa một bản ghi ở bảng cha có thể bị từ chối nếu bản ghi đó đang được tham chiếu bởi một khóa ngoại ở bảng con.",
+            "Sử dụng sai cú pháp DELETE(R; f) thành DELETE(f; R).",
+            "Cố gắng xóa một bản ghi đang có giá trị rỗng (null) ở khóa chính."
+          ],
+          "answer": "Quên rằng việc xóa một bản ghi ở bảng cha có thể bị từ chối nếu bản ghi đó đang được tham chiếu bởi một khóa ngoại ở bảng con.",
+          "explanation": "Đáp án đúng phản ánh lỗi phổ biến liên quan đến ràng buộc tham chiếu (khóa ngoại). Khi bản ghi cha bị xóa, nếu bản ghi con vẫn tham chiếu đến nó, hệ thống sẽ từ chối để tránh tạo ra dữ liệu 'mồ côi'."
+        },
+        {
+          "type": "quiz",
+          "question": "Thao tác cập nhật dữ liệu bao gồm những lệnh cơ bản nào?",
+          "options": [
+            "Thêm (Insert), Xóa (Delete) và Sửa (Modify).",
+            "Chọn (Select), Chiếu (Project) và Nối (Join).",
+            "Tạo bảng (Create), Xóa bảng (Drop) và Sửa bảng (Alter).",
+            "Hợp (Union), Giao (Intersect) và Trừ (Except)."
+          ],
+          "answer": "Thêm (Insert), Xóa (Delete) và Sửa (Modify).",
+          "explanation": "Đáp án đúng là Thêm, Xóa, Sửa - đây là các thao tác làm thay đổi trạng thái dữ liệu (DML). Chọn/Chiếu/Nối là phép toán truy vấn; Tạo/Xóa/Sửa bảng là thao tác trên cấu trúc (DDL); Hợp/Giao/Trừ là phép toán tập hợp."
+        },
+        {
+          "type": "flashcard",
+          "front": "Các thao tác cập nhật dữ liệu trong cơ sở dữ liệu bao gồm những gì?",
+          "back": "Bao gồm ba thao tác chính làm thay đổi trạng thái dữ liệu: Thêm mới (Insert), Xóa bỏ (Delete) và Sửa đổi (Modify)."
+        },
+        {
+          "type": "flashcard",
+          "front": "Điều gì xảy ra nếu một thao tác cập nhật vi phạm ràng buộc toàn vẹn?",
+          "back": "Hệ thống sẽ từ chối thực hiện thao tác đó hoặc tự động tiến hành các bước xử lý phụ trợ (như xóa lan truyền, gán null) để duy trì tính nhất quán."
+        },
+        {
+          "type": "essay",
+          "question": "Phân tích vai trò của Hệ quản trị cơ sở dữ liệu trong quá trình thực hiện các thao tác cập nhật (Thêm, Xóa, Sửa). Tại sao hệ thống bắt buộc phải kiểm tra các ràng buộc toàn vẹn một cách tự động?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 7
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t02",
+      "title": "Đại số quan hệ",
+      "theory": {
+        "definition": "Đại số quan hệ là một ngôn ngữ truy vấn hình thức bao gồm các toán hạng là các quan hệ và các toán tử là các phép toán dùng để thao tác, trích xuất dữ liệu.",
+        "explanation": "Đại số quan hệ cung cấp nền tảng lý thuyết cho các ngôn ngữ truy vấn cơ sở dữ liệu thực tế như SQL. Trong đại số quan hệ, một câu truy vấn được biểu diễn dưới dạng một biểu thức toán học. Đặc điểm quan trọng nhất của đại số quan hệ là tính đóng: toán hạng đầu vào là các quan hệ (bảng) và kết quả trả về của bất kỳ phép toán nào cũng luôn luôn là một quan hệ mới. Nhờ tính chất này, ta có thể lồng ghép nhiều phép toán lại với nhau, lấy kết quả của phép toán này làm đầu vào cho phép toán khác để giải quyết các yêu cầu truy vấn phức tạp.",
+        "examples": [
+          "Sử dụng phép chọn để tìm các nhân viên ở phòng số 4, sau đó dùng phép chiếu để chỉ lấy ra cột Họ tên và Lương của những nhân viên đó."
+        ],
+        "formulas": [],
+        "diagrams": [],
+        "key_points": [
+          "Toán hạng tham gia vào phép toán là các quan hệ hoặc tập hợp.",
+          "Kết quả trả về của mọi phép toán đại số quan hệ luôn là một quan hệ mới.",
+          "Cho phép lồng ghép các phép toán để tạo thành các biểu thức truy vấn phức tạp."
+        ],
+        "common_mistakes": [
+          "Nhầm lẫn giữa đại số quan hệ (ngôn ngữ lý thuyết, mang tính thủ tục) với SQL (ngôn ngữ thực hành, mang tính khai báo)."
+        ],
+        "related_topics": [
+          "t04",
+          "t05",
+          "t06",
+          "t07",
+          "t08",
+          "t09"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Đặc điểm quan trọng nhất của đại số quan hệ giúp ta có thể lồng ghép nhiều phép toán lại với nhau là gì?",
+          "options": [
+            "Tính giao hoán",
+            "Tính kết hợp",
+            "Tính đóng",
+            "Tính khả hợp"
+          ],
+          "answer": "Tính đóng",
+          "explanation": "Đáp án đúng là 'Tính đóng'. Tính đóng đảm bảo rằng kết quả của bất kỳ phép toán nào cũng luôn là một quan hệ mới, do đó có thể dùng kết quả này làm đầu vào cho phép toán tiếp theo. Các tính chất khác (giao hoán, kết hợp, khả hợp) chỉ áp dụng cho một số phép toán cụ thể."
+        },
+        {
+          "type": "quiz",
+          "question": "Đại số quan hệ khác biệt cơ bản với SQL ở điểm nào?",
+          "options": [
+            "Đại số quan hệ là ngôn ngữ thực hành, trong khi SQL là ngôn ngữ lý thuyết.",
+            "Đại số quan hệ mang tính khai báo, trong khi SQL mang tính thủ tục.",
+            "Đại số quan hệ là ngôn ngữ lý thuyết mang tính thủ tục, trong khi SQL là ngôn ngữ thực hành mang tính khai báo.",
+            "Đại số quan hệ chỉ thao tác trên các dòng, còn SQL chỉ thao tác trên các cột."
+          ],
+          "answer": "Đại số quan hệ là ngôn ngữ lý thuyết mang tính thủ tục, trong khi SQL là ngôn ngữ thực hành mang tính khai báo.",
+          "explanation": "Đáp án đúng chỉ ra sự nhầm lẫn phổ biến: Đại số quan hệ là nền tảng lý thuyết (chỉ ra từng bước thực hiện - thủ tục), còn SQL là ngôn ngữ thực tế (chỉ yêu cầu kết quả mong muốn - khai báo)."
+        },
+        {
+          "type": "quiz",
+          "question": "Toán hạng tham gia vào các phép toán của đại số quan hệ là gì?",
+          "options": [
+            "Các biến số nguyên và số thực.",
+            "Các quan hệ (bảng) hoặc tập hợp.",
+            "Các dòng dữ liệu đơn lẻ.",
+            "Các ràng buộc toàn vẹn."
+          ],
+          "answer": "Các quan hệ (bảng) hoặc tập hợp.",
+          "explanation": "Đáp án đúng là các quan hệ hoặc tập hợp. Đại số quan hệ thao tác trên toàn bộ bảng dữ liệu chứ không thao tác trên từng biến số hay dòng đơn lẻ."
+        },
+        {
+          "type": "flashcard",
+          "front": "Đại số quan hệ là gì?",
+          "back": "Là một ngôn ngữ truy vấn hình thức bao gồm các toán hạng là các quan hệ và các toán tử là các phép toán dùng để thao tác, trích xuất dữ liệu."
+        },
+        {
+          "type": "flashcard",
+          "front": "Tính đóng trong đại số quan hệ có ý nghĩa gì?",
+          "back": "Đảm bảo rằng kết quả trả về của bất kỳ phép toán đại số quan hệ nào cũng luôn luôn là một quan hệ mới, cho phép lồng ghép các phép toán."
+        },
+        {
+          "type": "essay",
+          "question": "Giải thích 'tính đóng' của đại số quan hệ. Tại sao tính chất này lại là nền tảng cốt lõi để xây dựng các câu truy vấn phức tạp?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 16
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t03",
+      "title": "Tính khả hợp (Union Compatibility)",
+      "theory": {
+        "definition": "Tính khả hợp là điều kiện bắt buộc yêu cầu hai quan hệ phải có cùng cấu trúc thuộc tính để có thể thực hiện được các phép toán tập hợp như hợp, giao, trừ.",
+        "explanation": "Không phải hai bảng dữ liệu bất kỳ nào cũng có thể gộp lại hay trừ đi lẫn nhau. Để thực hiện các phép toán tập hợp, hai quan hệ tham gia phải tương thích đồng nhất (khả hợp). Điều này đòi hỏi hai điều kiện: thứ nhất, chúng phải có cùng bậc, tức là cùng số lượng cột; thứ hai, các cột ở vị trí tương ứng của hai bảng phải có cùng miền giá trị (cùng kiểu dữ liệu). Khi hai quan hệ thỏa mãn điều kiện này, quan hệ kết quả sinh ra từ phép toán tập hợp sẽ mặc định kế thừa tên các thuộc tính từ quan hệ đầu tiên.",
+        "examples": [
+          "Bảng GIAOVIEN(Ho, Dem, Ten, Ngaysinh, HSL) và bảng NHANVIEN(Ho, Dem, Ten, Ngaysinh, HSL) là khả hợp vì đều có 5 cột và các cột tương ứng có cùng kiểu dữ liệu."
+        ],
+        "formulas": [
+          {
+            "name": "Điều kiện khả hợp",
+            "expression": "Bậc(R) = Bậc(S) = n VÀ DOM(Ai) = DOM(Bi) với 1 ≤ i ≤ n",
+            "note": "Hai quan hệ R và S phải có cùng số lượng thuộc tính (n), và miền giá trị của thuộc tính thứ i trong R phải bằng miền giá trị của thuộc tính thứ i trong S."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Là điều kiện tiên quyết để thực hiện phép hợp, phép giao và phép trừ.",
+          "Hai quan hệ phải có cùng số lượng thuộc tính (cùng bậc).",
+          "Các thuộc tính ở vị trí tương ứng phải có cùng miền giá trị.",
+          "Quan hệ kết quả lấy tên thuộc tính theo quan hệ thứ nhất."
+        ],
+        "common_mistakes": [
+          "Cố gắng thực hiện phép hợp giữa hai bảng có số lượng cột khác nhau hoặc kiểu dữ liệu các cột không tương ứng."
+        ],
+        "related_topics": [
+          "t04"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Hai điều kiện bắt buộc để hai quan hệ được coi là 'khả hợp' (Union Compatible) là gì?",
+          "options": [
+            "Cùng số lượng dòng và cùng tên các thuộc tính.",
+            "Cùng số lượng cột (cùng bậc) và các cột ở vị trí tương ứng phải có cùng miền giá trị.",
+            "Cùng khóa chính và cùng số lượng dòng dữ liệu.",
+            "Cùng tên quan hệ và cùng số lượng cột."
+          ],
+          "answer": "Cùng số lượng cột (cùng bậc) và các cột ở vị trí tương ứng phải có cùng miền giá trị.",
+          "explanation": "Đáp án đúng nêu rõ 2 điều kiện: cùng bậc (số cột) và cùng miền giá trị (kiểu dữ liệu) ở các cột tương ứng. Tên thuộc tính hay số lượng dòng không bắt buộc phải giống nhau."
+        },
+        {
+          "type": "quiz",
+          "question": "Khi thực hiện phép toán tập hợp trên hai quan hệ khả hợp, quan hệ kết quả sẽ lấy tên các thuộc tính từ đâu?",
+          "options": [
+            "Mặc định kế thừa tên các thuộc tính từ quan hệ đầu tiên.",
+            "Mặc định kế thừa tên các thuộc tính từ quan hệ thứ hai.",
+            "Hệ thống sẽ tự động tạo ra các tên thuộc tính mới.",
+            "Người dùng bắt buộc phải đặt tên mới cho tất cả các thuộc tính."
+          ],
+          "answer": "Mặc định kế thừa tên các thuộc tính từ quan hệ đầu tiên.",
+          "explanation": "Đáp án đúng: Theo quy tắc của đại số quan hệ, tên thuộc tính của bảng kết quả sẽ được lấy theo tên thuộc tính của quan hệ thứ nhất tham gia vào phép toán."
+        },
+        {
+          "type": "quiz",
+          "question": "Tính khả hợp là điều kiện tiên quyết để thực hiện nhóm phép toán nào sau đây?",
+          "options": [
+            "Phép chọn, phép chiếu và phép chia.",
+            "Phép nối, phép tích Đề-các và phép gán.",
+            "Phép hợp, phép giao và phép trừ.",
+            "Phép gom nhóm và các hàm kết hợp."
+          ],
+          "answer": "Phép hợp, phép giao và phép trừ.",
+          "explanation": "Đáp án đúng: Tính khả hợp chỉ áp dụng cho các phép toán tập hợp (Hợp, Giao, Trừ). Các phép toán khác như Chọn, Chiếu, Nối không yêu cầu hai bảng phải khả hợp."
+        },
+        {
+          "type": "flashcard",
+          "front": "Tính khả hợp (Union Compatibility) là gì?",
+          "back": "Là điều kiện bắt buộc yêu cầu hai quan hệ phải có cùng cấu trúc thuộc tính (cùng bậc và cùng miền giá trị ở các cột tương ứng) để thực hiện phép toán tập hợp."
+        },
+        {
+          "type": "flashcard",
+          "front": "Quan hệ kết quả của một phép toán tập hợp sẽ lấy tên thuộc tính như thế nào?",
+          "back": "Quan hệ kết quả sẽ mặc định kế thừa tên các thuộc tính từ quan hệ đầu tiên tham gia vào phép toán."
+        },
+        {
+          "type": "essay",
+          "question": "Tại sao các phép toán tập hợp (Hợp, Giao, Trừ) lại bắt buộc hai quan hệ tham gia phải thỏa mãn tính khả hợp? Cho ví dụ về một trường hợp cố tình thực hiện phép hợp trên hai bảng không khả hợp và hậu quả của nó."
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 19
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t04",
+      "title": "Phép toán tập hợp (Hợp, Giao, Trừ)",
+      "theory": {
+        "definition": "Các phép toán tập hợp là những phép toán thao tác trên hai quan hệ khả hợp để tạo ra một quan hệ mới chứa các bộ dữ liệu được gộp chung, lấy phần chung hoặc loại trừ lẫn nhau.",
+        "explanation": "Dựa trên lý thuyết tập hợp toán học, đại số quan hệ cung cấp ba phép toán cơ bản:\n- Phép hợp (Union) gộp tất cả các dòng của hai bảng lại với nhau. Nếu có những dòng xuất hiện ở cả hai bảng, hệ thống sẽ tự động loại bỏ sự trùng lặp để chỉ giữ lại một bản sao duy nhất.\n- Phép giao (Intersection) đóng vai trò như một bộ lọc, chỉ giữ lại những dòng dữ liệu xuất hiện đồng thời ở cả hai bảng.\n- Phép trừ (Difference) lấy các dòng có mặt trong bảng thứ nhất nhưng lại không tồn tại trong bảng thứ hai.\nTrong ba phép toán này, phép hợp và phép giao có tính chất giao hoán và kết hợp, nghĩa là thay đổi thứ tự các toán hạng không làm thay đổi kết quả. Ngược lại, phép trừ không có tính giao hoán.",
+        "examples": [
+          "Phép hợp giữa danh sách GIAOVIEN và danh sách NHANVIEN sẽ cho ra danh sách toàn bộ cán bộ của trường mà không bị lặp tên những người vừa làm giáo viên vừa làm nhân viên hành chính."
+        ],
+        "formulas": [
+          {
+            "name": "Phép hợp",
+            "expression": "R ∪ S = { t | t ∈ R ∨ t ∈ S }",
+            "note": "Kết quả chứa các bộ thuộc R hoặc thuộc S."
+          },
+          {
+            "name": "Phép giao",
+            "expression": "R ∩ S = { t | t ∈ R ∧ t ∈ S }",
+            "note": "Kết quả chứa các bộ vừa thuộc R vừa thuộc S."
+          },
+          {
+            "name": "Phép trừ",
+            "expression": "R - S = { t | t ∈ R ∧ t ∉ S }",
+            "note": "Kết quả chứa các bộ thuộc R nhưng không thuộc S."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Yêu cầu bắt buộc là hai quan hệ tham gia phải khả hợp.",
+          "Phép hợp gộp dữ liệu và tự động loại bỏ các bộ trùng lặp.",
+          "Phép giao và phép hợp có tính giao hoán và tính kết hợp.",
+          "Phép trừ không có tính giao hoán."
+        ],
+        "common_mistakes": [
+          "Quên mất rằng phép hợp trong đại số quan hệ mặc định loại bỏ các dòng trùng lặp (khác với UNION ALL trong SQL)."
+        ],
+        "related_topics": [
+          "t03"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Trong các phép toán tập hợp của đại số quan hệ, phép toán nào KHÔNG có tính giao hoán?",
+          "options": [
+            "Phép hợp (Union)",
+            "Phép giao (Intersection)",
+            "Phép trừ (Difference)",
+            "Cả ba phép toán trên đều có tính giao hoán"
+          ],
+          "answer": "Phép trừ (Difference)",
+          "explanation": "Đáp án đúng là Phép trừ. R - S khác với S - R (lấy phần có trong R mà không có trong S, khác với lấy phần có trong S mà không có trong R). Phép hợp và phép giao đều có tính giao hoán."
+        },
+        {
+          "type": "quiz",
+          "question": "Phép hợp (Union) trong đại số quan hệ xử lý các dòng dữ liệu trùng lặp như thế nào?",
+          "options": [
+            "Giữ nguyên tất cả các dòng trùng lặp để đảm bảo không mất dữ liệu.",
+            "Hệ thống sẽ báo lỗi và dừng câu truy vấn nếu phát hiện trùng lặp.",
+            "Tự động loại bỏ sự trùng lặp để chỉ giữ lại một bản sao duy nhất.",
+            "Chuyển các dòng trùng lặp sang một bảng tạm thời để người dùng tự xử lý."
+          ],
+          "answer": "Tự động loại bỏ sự trùng lặp để chỉ giữ lại một bản sao duy nhất.",
+          "explanation": "Đáp án đúng: Dựa trên lý thuyết tập hợp, phép hợp tự động loại bỏ các phần tử trùng lặp. Lỗi phổ biến là nhầm lẫn tính chất này với lệnh UNION ALL trong SQL (giữ lại trùng lặp)."
+        },
+        {
+          "type": "quiz",
+          "question": "Phép toán nào đóng vai trò như một bộ lọc, chỉ giữ lại những dòng dữ liệu xuất hiện ĐỒNG THỜI ở cả hai bảng?",
+          "options": [
+            "Phép hợp (Union)",
+            "Phép giao (Intersection)",
+            "Phép trừ (Difference)",
+            "Phép tích Đề-các (Cartesian Product)"
+          ],
+          "answer": "Phép giao (Intersection)",
+          "explanation": "Đáp án đúng là Phép giao (R ∩ S). Nó chỉ lấy phần chung tồn tại ở cả hai quan hệ."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép hợp (Union) trong đại số quan hệ có đặc điểm gì về việc xử lý dữ liệu trùng lặp?",
+          "back": "Phép hợp gộp tất cả các dòng của hai bảng và hệ thống sẽ tự động loại bỏ sự trùng lặp để chỉ giữ lại một bản sao duy nhất."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép trừ (Difference) thực hiện chức năng gì?",
+          "back": "Lấy các dòng dữ liệu có mặt trong bảng thứ nhất nhưng lại không tồn tại trong bảng thứ hai."
+        },
+        {
+          "type": "essay",
+          "question": "So sánh chức năng và tính chất (giao hoán, kết hợp) của ba phép toán tập hợp: Hợp, Giao và Trừ. Tại sao phép trừ lại không có tính giao hoán?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 22
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t05",
+      "title": "Phép chọn (Selection)",
+      "theory": {
+        "definition": "Phép chọn là phép toán trích xuất các bộ (dòng) từ một quan hệ thỏa mãn một biểu thức điều kiện logic cho trước.",
+        "explanation": "Phép chọn hoạt động giống như một bộ lọc dữ liệu theo chiều ngang. Nó duyệt qua từng dòng của bảng và kiểm tra xem dòng đó có thỏa mãn điều kiện đã chỉ định hay không; chỉ những dòng trả về kết quả đúng (true) mới được đưa vào quan hệ kết quả. Quan hệ mới sinh ra sẽ giữ nguyên toàn bộ cấu trúc các cột của quan hệ gốc, nhưng số lượng dòng sẽ giảm đi (hoặc giữ nguyên nếu tất cả đều thỏa mãn). Điều kiện chọn có thể là các phép so sánh đơn giản (lớn hơn, nhỏ hơn, bằng...) hoặc được kết hợp phức tạp thông qua các toán tử logic AND, OR, NOT. Phép chọn có tính giao hoán, nghĩa là việc lọc theo điều kiện A rồi đến điều kiện B sẽ cho kết quả giống hệt như lọc theo điều kiện B rồi mới đến điều kiện A.",
+        "examples": [
+          "Lọc ra danh sách các nhân viên có mức lương lớn hơn 3.000.000 và làm việc tại phòng số 5."
+        ],
+        "formulas": [
+          {
+            "name": "Phép chọn",
+            "expression": "σ_P (R)",
+            "note": "Trích xuất các bộ từ quan hệ R thỏa mãn điều kiện P."
+          },
+          {
+            "name": "Tính giao hoán của phép chọn",
+            "expression": "σ_p1 (σ_p2 (R)) = σ_p2 (σ_p1 (R))",
+            "note": "Thứ tự thực hiện các phép chọn không ảnh hưởng đến kết quả cuối cùng."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Lọc dữ liệu theo chiều ngang (chọn dòng).",
+          "Quan hệ kết quả có cùng danh sách thuộc tính với quan hệ gốc.",
+          "Số lượng bộ của kết quả luôn ít hơn hoặc bằng số lượng bộ của quan hệ gốc.",
+          "Điều kiện chọn được xây dựng từ các phép so sánh và toán tử logic.",
+          "Phép chọn có tính giao hoán và tính kết hợp."
+        ],
+        "common_mistakes": [
+          "Nhầm lẫn giữa phép chọn (lọc dòng) và phép chiếu (lọc cột)."
+        ],
+        "related_topics": [
+          "t06"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Phép chọn (Selection) trong đại số quan hệ thao tác trên dữ liệu theo chiều hướng nào?",
+          "options": [
+            "Lọc dữ liệu theo chiều dọc (cắt xén các cột).",
+            "Lọc dữ liệu theo chiều ngang (trích xuất các dòng).",
+            "Kết hợp dữ liệu chéo giữa hai bảng.",
+            "Gom nhóm dữ liệu theo các giá trị giống nhau."
+          ],
+          "answer": "Lọc dữ liệu theo chiều ngang (trích xuất các dòng).",
+          "explanation": "Đáp án đúng: Phép chọn hoạt động như một bộ lọc theo chiều ngang, duyệt qua từng dòng để kiểm tra điều kiện. Lọc theo chiều dọc là chức năng của phép chiếu."
+        },
+        {
+          "type": "quiz",
+          "question": "Cấu trúc (danh sách thuộc tính) của quan hệ kết quả sau khi thực hiện phép chọn sẽ như thế nào so với quan hệ gốc?",
+          "options": [
+            "Chỉ giữ lại những thuộc tính được sử dụng trong biểu thức điều kiện.",
+            "Giữ nguyên toàn bộ cấu trúc các cột của quan hệ gốc.",
+            "Số lượng cột sẽ giảm đi tương ứng với số lượng dòng bị loại bỏ.",
+            "Hệ thống sẽ tự động thêm một cột mới để đánh dấu các dòng thỏa mãn điều kiện."
+          ],
+          "answer": "Giữ nguyên toàn bộ cấu trúc các cột của quan hệ gốc.",
+          "explanation": "Đáp án đúng: Phép chọn chỉ làm giảm số lượng dòng (hoặc giữ nguyên), nhưng cấu trúc cột (thuộc tính) của bảng kết quả giống hệt bảng gốc."
+        },
+        {
+          "type": "quiz",
+          "question": "Tính giao hoán của phép chọn mang ý nghĩa gì?",
+          "options": [
+            "Có thể thay đổi tên các cột trong điều kiện chọn mà không làm thay đổi kết quả.",
+            "Việc lọc theo điều kiện A rồi đến điều kiện B sẽ cho kết quả giống hệt như lọc theo điều kiện B rồi mới đến điều kiện A.",
+            "Có thể hoán đổi vị trí của bảng dữ liệu và biểu thức điều kiện trong cú pháp.",
+            "Phép chọn có thể được thay thế hoàn toàn bằng phép chiếu."
+          ],
+          "answer": "Việc lọc theo điều kiện A rồi đến điều kiện B sẽ cho kết quả giống hệt như lọc theo điều kiện B rồi mới đến điều kiện A.",
+          "explanation": "Đáp án đúng giải thích tính giao hoán: thứ tự thực hiện các phép chọn lồng nhau không ảnh hưởng đến kết quả cuối cùng (σ_p1(σ_p2(R)) = σ_p2(σ_p1(R)))."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép chọn (Selection) là gì?",
+          "back": "Là phép toán trích xuất các bộ (dòng) từ một quan hệ thỏa mãn một biểu thức điều kiện logic cho trước, hoạt động như bộ lọc theo chiều ngang."
+        },
+        {
+          "type": "flashcard",
+          "front": "Số lượng bộ (dòng) và cấu trúc thuộc tính của quan hệ kết quả sau phép chọn như thế nào so với quan hệ gốc?",
+          "back": "Cấu trúc thuộc tính giữ nguyên hoàn toàn. Số lượng bộ luôn ít hơn hoặc bằng số lượng bộ của quan hệ gốc."
+        },
+        {
+          "type": "essay",
+          "question": "Phân tích sự khác biệt cơ bản giữa Phép chọn (Selection) và Phép chiếu (Projection) trong cách chúng trích xuất dữ liệu từ một quan hệ. Tại sao người học thường nhầm lẫn hai phép toán này?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 28
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t06",
+      "title": "Phép chiếu (Projection)",
+      "theory": {
+        "definition": "Phép chiếu là phép toán trích xuất một số thuộc tính (cột) cụ thể từ một quan hệ và loại bỏ các thuộc tính không được chỉ định.",
+        "explanation": "Trái ngược với phép chọn, phép chiếu thực hiện việc cắt xén dữ liệu theo chiều dọc. Nó tạo ra một bảng mới chỉ chứa những cột mà người dùng quan tâm. Do tính chất cơ bản của mô hình quan hệ là một tập hợp (không cho phép các phần tử trùng lặp), nếu việc loại bỏ một số cột dẫn đến tình trạng xuất hiện các dòng dữ liệu giống hệt nhau trong kết quả, hệ thống sẽ tự động gộp các dòng trùng lặp đó lại thành một dòng duy nhất. Phép chiếu không có tính giao hoán, và một phép chiếu lồng bên ngoài chỉ hợp lệ nếu danh sách thuộc tính của nó là tập con của danh sách thuộc tính của phép chiếu bên trong.",
+        "examples": [
+          "Từ bảng NHANVIEN chứa rất nhiều thông tin cá nhân, dùng phép chiếu để tạo ra một danh sách chỉ gồm hai cột là Họ tên và Lương."
+        ],
+        "formulas": [
+          {
+            "name": "Phép chiếu",
+            "expression": "π_A1, A2, ..., Ak (R)",
+            "note": "Tạo ra quan hệ mới chỉ chứa các thuộc tính A1, A2... Ak từ quan hệ R."
+          },
+          {
+            "name": "Tính chất lồng nhau của phép chiếu",
+            "expression": "π_X (π_Y (R)) = π_X (R) với điều kiện X ⊆ Y",
+            "note": "Phép chiếu X trên kết quả của phép chiếu Y chỉ hợp lệ và tương đương với phép chiếu X trên R nếu tập thuộc tính X nằm hoàn toàn trong tập thuộc tính Y."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Lọc dữ liệu theo chiều dọc (chọn cột).",
+          "Quan hệ kết quả chỉ chứa các thuộc tính được liệt kê trong phép chiếu.",
+          "Tự động loại bỏ các bộ trùng lặp sinh ra sau khi loại bỏ các cột khác.",
+          "Phép chiếu không có tính giao hoán."
+        ],
+        "common_mistakes": [
+          "Thực hiện phép chiếu lồng nhau nhưng tập thuộc tính của phép chiếu ngoài lại chứa thuộc tính không tồn tại trong kết quả của phép chiếu bên trong."
+        ],
+        "related_topics": [
+          "t05"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Chức năng chính của phép chiếu (Projection) là gì?",
+          "options": [
+            "Lọc dữ liệu theo chiều ngang để lấy ra các dòng thỏa mãn điều kiện.",
+            "Trích xuất một số thuộc tính (cột) cụ thể từ một quan hệ và loại bỏ các thuộc tính không được chỉ định.",
+            "Ghép nối các cột của hai bảng khác nhau lại thành một bảng duy nhất.",
+            "Đổi tên các cột trong một bảng để dễ đọc hơn."
+          ],
+          "answer": "Trích xuất một số thuộc tính (cột) cụ thể từ một quan hệ và loại bỏ các thuộc tính không được chỉ định.",
+          "explanation": "Đáp án đúng: Phép chiếu thực hiện cắt xén dữ liệu theo chiều dọc (chọn cột). Lọc dòng là phép chọn, ghép nối là phép nối, đổi tên là phép đổi tên."
+        },
+        {
+          "type": "quiz",
+          "question": "Điều gì sẽ xảy ra nếu việc loại bỏ một số cột trong phép chiếu dẫn đến tình trạng xuất hiện các dòng dữ liệu giống hệt nhau?",
+          "options": [
+            "Hệ thống sẽ báo lỗi vi phạm ràng buộc khóa chính.",
+            "Hệ thống sẽ giữ nguyên tất cả các dòng trùng lặp đó.",
+            "Hệ thống sẽ tự động gộp các dòng trùng lặp đó lại thành một dòng duy nhất.",
+            "Hệ thống sẽ tự động khôi phục lại các cột đã bị loại bỏ để phân biệt các dòng."
+          ],
+          "answer": "Hệ thống sẽ tự động gộp các dòng trùng lặp đó lại thành một dòng duy nhất.",
+          "explanation": "Đáp án đúng: Do tính chất của mô hình quan hệ là một tập hợp (không cho phép phần tử trùng lặp), phép chiếu sẽ tự động loại bỏ các bộ trùng lặp sinh ra sau khi cắt cột."
+        },
+        {
+          "type": "quiz",
+          "question": "Điều kiện để một phép chiếu lồng nhau (ví dụ: π_X (π_Y (R))) hợp lệ là gì?",
+          "options": [
+            "Tập thuộc tính X và tập thuộc tính Y phải hoàn toàn khác nhau.",
+            "Tập thuộc tính X phải là tập con của tập thuộc tính Y (X ⊆ Y).",
+            "Tập thuộc tính Y phải là tập con của tập thuộc tính X (Y ⊆ X).",
+            "Phép chiếu không cho phép lồng nhau trong mọi trường hợp."
+          ],
+          "answer": "Tập thuộc tính X phải là tập con của tập thuộc tính Y (X ⊆ Y).",
+          "explanation": "Đáp án đúng: Phép chiếu bên ngoài (X) chỉ có thể lấy các cột từ kết quả của phép chiếu bên trong (Y). Nếu X chứa cột không có trong Y, phép toán sẽ lỗi."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép chiếu (Projection) xử lý dữ liệu trùng lặp như thế nào?",
+          "back": "Hệ thống sẽ tự động gộp (loại bỏ) các dòng trùng lặp sinh ra sau khi loại bỏ các cột, để đảm bảo kết quả là một tập hợp hợp lệ."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép chiếu có tính giao hoán không?",
+          "back": "Không, phép chiếu không có tính giao hoán."
+        },
+        {
+          "type": "essay",
+          "question": "Giải thích lý do tại sao kết quả của một phép chiếu (chỉ cắt bỏ cột) lại có thể làm giảm số lượng dòng (bộ) so với quan hệ gốc. Cho một ví dụ minh họa thực tế."
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 35
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t07",
+      "title": "Phép tích Đề-các (Cartesian Product)",
+      "theory": {
+        "definition": "Phép tích Đề-các là phép toán kết hợp vô điều kiện mỗi bộ của quan hệ thứ nhất với mọi bộ của quan hệ thứ hai để tạo ra một quan hệ mới.",
+        "explanation": "Phép toán này thực hiện việc ghép nối chéo tất cả các khả năng có thể xảy ra giữa hai bảng dữ liệu. Nếu bảng thứ nhất có i dòng và bảng thứ hai có k dòng, quan hệ kết quả sẽ bùng nổ kích thước thành một bảng khổng lồ chứa i \\times k dòng. Cấu trúc của bảng mới này là sự gộp chung tất cả các cột của cả hai bảng ban đầu. Tuy nhiên, do việc ghép nối diễn ra một cách mù quáng không theo quy luật logic nào, phần lớn các dòng dữ liệu sinh ra từ tích Đề-các đều không mang ý nghĩa thực tế. Vì vậy, phép toán này hiếm khi được sử dụng độc lập mà thường đóng vai trò là bước trung gian, theo sau bởi một phép chọn để lọc ra những tổ hợp dữ liệu có ý nghĩa (đây chính là nền tảng của phép nối).",
+        "examples": [
+          "Ghép bảng SinhVien (có 3 sinh viên) với bảng MonHoc (có 4 môn học) bằng tích Đề-các sẽ tạo ra một bảng gồm 12 dòng, liệt kê mọi tổ hợp có thể ghép giữa sinh viên và môn học."
+        ],
+        "formulas": [
+          {
+            "name": "Phép tích Đề-các",
+            "expression": "R × S = { <t, u> | t ∈ R, u ∈ S }",
+            "note": "Kết quả là tập hợp các bộ được tạo thành bằng cách nối một bộ t của R với một bộ u của S."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Kết hợp mọi dòng của quan hệ này với mọi dòng của quan hệ kia một cách vô điều kiện.",
+          "Số lượng dòng của kết quả bằng tích số lượng dòng của hai quan hệ tham gia.",
+          "Số lượng cột của kết quả bằng tổng số lượng cột của hai quan hệ tham gia.",
+          "Thường được sử dụng kết hợp với phép chọn để tạo thành phép nối."
+        ],
+        "common_mistakes": [
+          "Sử dụng tích Đề-các trên hai bảng dữ liệu lớn mà không có phép chọn đi kèm, dẫn đến việc tạo ra một lượng dữ liệu rác khổng lồ làm treo hệ thống."
+        ],
+        "related_topics": [
+          "t08"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Kích thước (số dòng) của quan hệ kết quả sau khi thực hiện phép tích Đề-các giữa bảng R (có i dòng) và bảng S (có k dòng) là bao nhiêu?",
+          "options": [
+            "i + k dòng",
+            "i - k dòng",
+            "i * k dòng",
+            "Max(i, k) dòng"
+          ],
+          "answer": "i * k dòng",
+          "explanation": "Đáp án đúng: Phép tích Đề-các kết hợp vô điều kiện mỗi dòng của bảng này với mọi dòng của bảng kia, nên số dòng kết quả là tích số lượng dòng của hai bảng (i * k)."
+        },
+        {
+          "type": "quiz",
+          "question": "Cấu trúc cột của quan hệ kết quả sinh ra từ phép tích Đề-các được xác định như thế nào?",
+          "options": [
+            "Chỉ bao gồm các cột của bảng thứ nhất.",
+            "Là sự gộp chung tất cả các cột của cả hai bảng ban đầu.",
+            "Chỉ bao gồm các cột có cùng tên giữa hai bảng.",
+            "Là các cột của bảng thứ nhất trừ đi các cột của bảng thứ hai."
+          ],
+          "answer": "Là sự gộp chung tất cả các cột của cả hai bảng ban đầu.",
+          "explanation": "Đáp án đúng: Số lượng cột của kết quả bằng tổng số lượng cột của hai quan hệ tham gia."
+        },
+        {
+          "type": "quiz",
+          "question": "Tại sao phép tích Đề-các hiếm khi được sử dụng độc lập trong thực tế?",
+          "options": [
+            "Vì nó yêu cầu hai bảng phải khả hợp mới thực hiện được.",
+            "Vì nó tự động xóa mất các dữ liệu quan trọng của bảng thứ hai.",
+            "Vì việc ghép nối diễn ra mù quáng, tạo ra phần lớn các dòng dữ liệu không mang ý nghĩa thực tế và làm bùng nổ kích thước dữ liệu.",
+            "Vì nó không hỗ trợ các bảng có chứa giá trị rỗng (null)."
+          ],
+          "answer": "Vì việc ghép nối diễn ra mù quáng, tạo ra phần lớn các dòng dữ liệu không mang ý nghĩa thực tế và làm bùng nổ kích thước dữ liệu.",
+          "explanation": "Đáp án đúng: Tích Đề-các tạo ra mọi tổ hợp có thể, sinh ra lượng lớn dữ liệu rác không có logic. Nó thường phải đi kèm phép chọn để tạo thành phép nối."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép tích Đề-các (Cartesian Product) là gì?",
+          "back": "Là phép toán kết hợp vô điều kiện mỗi bộ của quan hệ thứ nhất với mọi bộ của quan hệ thứ hai để tạo ra một quan hệ mới."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép tích Đề-các thường được kết hợp với phép toán nào để tạo ra dữ liệu có ý nghĩa?",
+          "back": "Thường được kết hợp với Phép chọn (Selection) để lọc ra những tổ hợp dữ liệu có ý nghĩa, đây chính là nền tảng của Phép nối (Join)."
+        },
+        {
+          "type": "essay",
+          "question": "Phân tích rủi ro về mặt hiệu suất và logic khi thực hiện phép tích Đề-các trên hai bảng dữ liệu lớn mà không có phép chọn đi kèm. Tại sao phép toán này lại là nền tảng của phép nối?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 49
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t08",
+      "title": "Phép nối (Join)",
+      "theory": {
+        "definition": "Phép nối là phép toán kết hợp các bộ từ hai quan hệ thành một bộ mới dựa trên việc thỏa mãn một điều kiện nối cụ thể.",
+        "explanation": "Phép nối là công cụ quan trọng nhất để liên kết dữ liệu bị phân tán ở nhiều bảng khác nhau. Về bản chất, phép nối tương đương với việc thực hiện một phép tích Đề-các để tạo ra mọi tổ hợp, sau đó dùng phép chọn để chỉ giữ lại những tổ hợp thỏa mãn điều kiện logic (điều kiện nối). Điều kiện này thường là sự so sánh giữa hai thuộc tính có cùng ý nghĩa và miền giá trị ở hai bảng.\n\nCó ba dạng phép nối phổ biến:\n1. Nối theta: Sử dụng bất kỳ phép toán so sánh nào (<, >, =, \\\\ne...) trong điều kiện nối.\n2. Nối bằng (Equi join): Là trường hợp đặc biệt của nối theta khi điều kiện nối chỉ sử dụng duy nhất dấu bằng (=).\n3. Nối tự nhiên (Natural join): Tự động tìm và nối bằng trên tất cả các cặp thuộc tính có cùng tên giữa hai bảng, sau đó tự động loại bỏ đi một cột trùng lặp trong kết quả để bảng gọnàng hơn.",
+        "examples": [
+          "Nối bảng SINHVIEN và bảng DIEM dựa trên điều kiện SINHVIEN.Masv = DIEM.Masv để xem điểm thi chi tiết của từng sinh viên."
+        ],
+        "formulas": [
+          {
+            "name": "Phép nối Theta",
+            "expression": "R ⨝_f S",
+            "note": "Nối quan hệ R và S với điều kiện f bất kỳ."
+          },
+          {
+            "name": "Phép nối tự nhiên",
+            "expression": "R * S",
+            "note": "Nối tự động trên các thuộc tính cùng tên và loại bỏ cột dư thừa."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Dùng để liên kết dữ liệu có ý nghĩa logic từ hai quan hệ khác nhau.",
+          "Chỉ những cặp bộ thỏa mãn điều kiện nối mới được đưa vào kết quả.",
+          "Nối bằng là dạng nối phổ biến nhất trong thực tế.",
+          "Nối tự nhiên tự động nối trên các thuộc tính cùng tên và loại bỏ sự trùng lặp cột."
+        ],
+        "common_mistakes": [
+          "Thực hiện nối tự nhiên trên hai bảng có những cột trùng tên nhưng mang ý nghĩa hoàn toàn khác nhau, dẫn đến kết quả sai lệch."
+        ],
+        "related_topics": [
+          "t07",
+          "t12"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Về bản chất, phép nối (Join) tương đương với sự kết hợp của hai phép toán cơ bản nào?",
+          "options": [
+            "Phép hợp và Phép chiếu",
+            "Phép tích Đề-các và Phép chọn",
+            "Phép giao và Phép trừ",
+            "Phép chia và Phép chọn"
+          ],
+          "answer": "Phép tích Đề-các và Phép chọn",
+          "explanation": "Đáp án đúng: Phép nối thực hiện tích Đề-các để tạo mọi tổ hợp, sau đó dùng phép chọn để giữ lại các tổ hợp thỏa mãn điều kiện nối."
+        },
+        {
+          "type": "quiz",
+          "question": "Phép nối bằng (Equi join) là gì?",
+          "options": [
+            "Là phép nối tự động tìm các cột cùng tên và loại bỏ cột dư thừa.",
+            "Là trường hợp đặc biệt của nối theta khi điều kiện nối chỉ sử dụng duy nhất dấu bằng (=).",
+            "Là phép nối yêu cầu hai bảng phải có số lượng dòng bằng nhau.",
+            "Là phép nối giữ lại tất cả các dòng của cả hai bảng dù có khớp điều kiện hay không."
+          ],
+          "answer": "Là trường hợp đặc biệt của nối theta khi điều kiện nối chỉ sử dụng duy nhất dấu bằng (=).",
+          "explanation": "Đáp án đúng: Nối bằng chỉ sử dụng toán tử '='. Nối tự động tìm cột cùng tên và loại bỏ cột trùng là Nối tự nhiên (Natural join)."
+        },
+        {
+          "type": "quiz",
+          "question": "Đặc điểm nổi bật của phép nối tự nhiên (Natural join) so với các phép nối khác là gì?",
+          "options": [
+            "Cho phép sử dụng các toán tử so sánh như <, > trong điều kiện nối.",
+            "Giữ lại cả những dòng không thỏa mãn điều kiện nối bằng cách gán null.",
+            "Tự động tìm và nối bằng trên tất cả các cặp thuộc tính cùng tên, sau đó tự động loại bỏ đi một cột trùng lặp.",
+            "Yêu cầu hai bảng tham gia phải hoàn toàn khả hợp."
+          ],
+          "answer": "Tự động tìm và nối bằng trên tất cả các cặp thuộc tính cùng tên, sau đó tự động loại bỏ đi một cột trùng lặp.",
+          "explanation": "Đáp án đúng mô tả chính xác hành vi của nối tự nhiên: tự động tìm cột cùng tên, nối bằng (=), và làm gọn bảng bằng cách bỏ cột trùng."
+        },
+        {
+          "type": "quiz",
+          "question": "Một sai lầm phổ biến khi sử dụng phép nối tự nhiên (Natural join) là gì?",
+          "options": [
+            "Thực hiện nối trên hai bảng không có bất kỳ cột nào trùng tên.",
+            "Thực hiện nối tự nhiên trên hai bảng có những cột trùng tên nhưng mang ý nghĩa hoàn toàn khác nhau, dẫn đến kết quả sai lệch.",
+            "Quên chỉ định điều kiện nối bằng mệnh đề ON hoặc WHERE.",
+            "Sử dụng nối tự nhiên để thay thế cho phép hợp."
+          ],
+          "answer": "Thực hiện nối tự nhiên trên hai bảng có những cột trùng tên nhưng mang ý nghĩa hoàn toàn khác nhau, dẫn đến kết quả sai lệch.",
+          "explanation": "Đáp án đúng: Vì nối tự nhiên tự động nối dựa trên TÊN cột, nếu hai cột trùng tên (ví dụ cột 'Ten' ở bảng SinhVien và 'Ten' ở bảng MonHoc) nhưng khác ý nghĩa, kết quả nối sẽ hoàn toàn sai logic."
+        },
+        {
+          "type": "quiz",
+          "question": "Phép nối Theta khác với Phép nối bằng ở điểm nào?",
+          "options": [
+            "Nối Theta tự động loại bỏ cột trùng lặp, còn nối bằng thì không.",
+            "Nối Theta sử dụng bất kỳ phép toán so sánh nào (<, >, =, !=), trong khi nối bằng chỉ dùng dấu bằng (=).",
+            "Nối Theta chỉ áp dụng cho dữ liệu kiểu số, nối bằng áp dụng cho mọi kiểu dữ liệu.",
+            "Nối Theta là phép nối ngoài, nối bằng là phép nối trong."
+          ],
+          "answer": "Nối Theta sử dụng bất kỳ phép toán so sánh nào (<, >, =, !=), trong khi nối bằng chỉ dùng dấu bằng (=).",
+          "explanation": "Đáp án đúng: Nối Theta là dạng tổng quát cho phép mọi toán tử so sánh. Nối bằng là tập con của nối Theta."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép nối (Join) là gì?",
+          "back": "Là phép toán kết hợp các bộ từ hai quan hệ thành một bộ mới dựa trên việc thỏa mãn một điều kiện nối cụ thể."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép nối tự nhiên (Natural Join) hoạt động như thế nào?",
+          "back": "Tự động nối bằng trên tất cả các cặp thuộc tính có cùng tên giữa hai bảng, và tự động loại bỏ đi một cột trùng lặp trong kết quả."
+        },
+        {
+          "type": "essay",
+          "question": "So sánh Phép nối bằng (Equi join) và Phép nối tự nhiên (Natural join). Trong tình huống thực tế nào việc sử dụng Phép nối tự nhiên có thể gây ra rủi ro sai lệch dữ liệu?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 61
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t09",
+      "title": "Phép chia (Division)",
+      "theory": {
+        "definition": "Phép chia là phép toán trích xuất các bộ từ quan hệ bị chia có mối liên kết với toàn bộ các bộ trong quan hệ chia.",
+        "explanation": "Phép chia là một phép toán đặc thù thường được dùng để giải quyết các câu truy vấn mang tính chất bao hàm toàn bộ, chứa các từ khóa như 'tất cả', 'mọi'. Giả sử ta có quan hệ R (số bị chia) và quan hệ S (số chia), trong đó tập thuộc tính của S là tập con của tập thuộc tính của R. Phép chia R \\\\div S sẽ trả về một quan hệ mới chứa các thuộc tính của R không có trong S. Một dòng dữ liệu sẽ chỉ xuất hiện trong kết quả nếu nó kết hợp được với tất cả các dòng dữ liệu của bảng S để tạo thành các bộ tồn tại hợp lệ trong bảng R.",
+        "examples": [
+          "Giả sử bảng SV_DIEM lưu sinh viên và môn đã thi, bảng MONHOC lưu danh sách tất cả các môn. Phép chia SV_DIEM cho MONHOC sẽ trả về mã của những sinh viên đã thi 'tất cả' các môn học."
+        ],
+        "formulas": [
+          {
+            "name": "Phép chia",
+            "expression": "T(Y) = R(Z) ÷ S(X)",
+            "note": "Với X là tập con của Z, Y = Z - X. Một bộ t thuộc T nếu với mọi bộ u thuộc S, tổ hợp <t, u> đều nằm trong R."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Thường dùng cho các truy vấn có điều kiện 'tất cả' (all, every).",
+          "Tập thuộc tính của quan hệ chia phải là tập con của quan hệ bị chia.",
+          "Quan hệ kết quả bao gồm các thuộc tính của quan hệ bị chia trừ đi các thuộc tính của quan hệ chia.",
+          "Có thể được biểu diễn thông qua sự kết hợp của phép chiếu, tích Đề-các và phép trừ."
+        ],
+        "common_mistakes": [
+          "Sử dụng phép chia khi yêu cầu truy vấn chỉ là 'một vài' hoặc 'ít nhất một' thay vì 'tất cả'."
+        ],
+        "related_topics": []
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Phép chia (Division) trong đại số quan hệ thường được sử dụng để giải quyết loại câu truy vấn nào?",
+          "options": [
+            "Các truy vấn tìm kiếm giá trị lớn nhất hoặc nhỏ nhất.",
+            "Các truy vấn mang tính chất bao hàm toàn bộ, chứa các từ khóa như 'tất cả', 'mọi'.",
+            "Các truy vấn yêu cầu tính tổng hoặc đếm số lượng bản ghi.",
+            "Các truy vấn tìm kiếm chuỗi ký tự gần đúng."
+          ],
+          "answer": "Các truy vấn mang tính chất bao hàm toàn bộ, chứa các từ khóa như 'tất cả', 'mọi'.",
+          "explanation": "Đáp án đúng: Phép chia là công cụ đặc thù để xử lý điều kiện 'tất cả' (ví dụ: tìm sinh viên đã học 'tất cả' các môn)."
+        },
+        {
+          "type": "quiz",
+          "question": "Điều kiện về cấu trúc thuộc tính để thực hiện phép chia R ÷ S là gì?",
+          "options": [
+            "Tập thuộc tính của R và S phải hoàn toàn giống nhau (khả hợp).",
+            "Tập thuộc tính của R phải là tập con của tập thuộc tính của S.",
+            "Tập thuộc tính của S (quan hệ chia) phải là tập con của tập thuộc tính của R (quan hệ bị chia).",
+            "R và S không được phép có bất kỳ thuộc tính nào trùng tên."
+          ],
+          "answer": "Tập thuộc tính của S (quan hệ chia) phải là tập con của tập thuộc tính của R (quan hệ bị chia).",
+          "explanation": "Đáp án đúng: Để chia được, các cột của bảng chia (S) phải nằm gọn trong bảng bị chia (R)."
+        },
+        {
+          "type": "quiz",
+          "question": "Quan hệ kết quả của phép chia R(Z) ÷ S(X) sẽ bao gồm những thuộc tính nào?",
+          "options": [
+            "Chỉ bao gồm các thuộc tính của X.",
+            "Bao gồm toàn bộ các thuộc tính của Z và X.",
+            "Chứa các thuộc tính của R không có trong S (Y = Z - X).",
+            "Chỉ bao gồm một cột duy nhất chứa giá trị boolean (True/False)."
+          ],
+          "answer": "Chứa các thuộc tính của R không có trong S (Y = Z - X).",
+          "explanation": "Đáp án đúng: Kết quả trả về các thuộc tính còn lại của R sau khi đã trừ đi các thuộc tính của S."
+        },
+        {
+          "type": "quiz",
+          "question": "Lỗi sai phổ biến nhất khi quyết định sử dụng phép chia là gì?",
+          "options": [
+            "Sử dụng phép chia khi yêu cầu truy vấn chỉ là 'một vài' hoặc 'ít nhất một' thay vì 'tất cả'.",
+            "Quên đổi tên các thuộc tính trước khi chia.",
+            "Áp dụng phép chia cho các bảng có chứa dữ liệu kiểu chuỗi.",
+            "Sử dụng phép chia thay cho phép trừ."
+          ],
+          "answer": "Sử dụng phép chia khi yêu cầu truy vấn chỉ là 'một vài' hoặc 'ít nhất một' thay vì 'tất cả'.",
+          "explanation": "Đáp án đúng: Phép chia chỉ đúng logic khi bài toán yêu cầu sự bao hàm trọn vẹn ('tất cả'). Nếu chỉ cần 'ít nhất một', ta dùng phép nối."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép chia (Division) dùng để làm gì?",
+          "back": "Trích xuất các bộ từ quan hệ bị chia có mối liên kết với TOÀN BỘ các bộ trong quan hệ chia. Thường dùng cho truy vấn có từ khóa 'tất cả', 'mọi'."
+        },
+        {
+          "type": "flashcard",
+          "front": "Tập thuộc tính của quan hệ kết quả trong phép chia được xác định như thế nào?",
+          "back": "Bao gồm các thuộc tính của quan hệ bị chia trừ đi các thuộc tính của quan hệ chia."
+        },
+        {
+          "type": "essay",
+          "question": "Giải thích logic hoạt động của phép chia thông qua ví dụ: Tìm mã sinh viên đã thi 'tất cả' các môn học. Tại sao việc sử dụng phép chia lại tối ưu hơn trong trường hợp này so với các phép toán khác?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 76
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t10",
+      "title": "Phép gán và Phép đổi tên",
+      "theory": {
+        "definition": "Phép gán dùng để lưu trữ kết quả của một biểu thức đại số vào một biến quan hệ tạm thời, còn phép đổi tên dùng để thay đổi tên của quan hệ hoặc tên các thuộc tính bên trong nó.",
+        "explanation": "Khi xây dựng các câu truy vấn phức tạp, việc viết gộp tất cả các phép toán vào một biểu thức duy nhất sẽ khiến câu lệnh trở nên rất dài và khó đọc. Phép gán (\\\\leftarrow) giải quyết vấn đề này bằng cách cho phép người dùng chia nhỏ truy vấn thành nhiều bước tuần tự, lưu kết quả trung gian vào các biến tạm để tái sử dụng ở các bước sau.\n\nPhép đổi tên (\\\\rho) lại mang một vai trò khác. Nó cho phép định dạng lại tên bảng hoặc tên cột cho rõ ràng, dễ hiểu hơn trước khi xuất kết quả. Đặc biệt, phép đổi tên là công cụ bắt buộc phải dùng khi ta muốn thực hiện phép nối một bảng với chính nó (self-join), vì ta cần tạo ra hai bản sao với tên gọi khác nhau để hệ thống có thể phân biệt.",
+        "examples": [
+          "Dùng phép gán: PB_NV ← σ_PHG=4(NHANVIEN) để lưu danh sách nhân viên phòng 4 vào biến tạm PB_NV.",
+          "Dùng phép đổi tên: ρ_S(R) để đổi tên quan hệ R thành S."
+        ],
+        "formulas": [
+          {
+            "name": "Phép gán",
+            "expression": "S ← biểu_thức",
+            "note": "Gán kết quả của biểu thức đại số cho quan hệ S."
+          },
+          {
+            "name": "Phép đổi tên quan hệ",
+            "expression": "ρ_S (R)",
+            "note": "Đổi tên quan hệ R thành S."
+          },
+          {
+            "name": "Phép đổi tên thuộc tính",
+            "expression": "ρ_(X, C, D) (R)",
+            "note": "Đổi tên thuộc tính đầu tiên (ví dụ B) thành X trong quan hệ R(B,C,D)."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Phép gán giúp chia nhỏ biểu thức phức tạp thành các bước trung gian dễ quản lý.",
+          "Phép đổi tên giúp thay đổi tên quan hệ hoặc tên thuộc tính.",
+          "Phép đổi tên rất cần thiết khi thực hiện phép nối một quan hệ với chính nó."
+        ],
+        "common_mistakes": [],
+        "related_topics": []
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Mục đích chính của phép gán trong đại số quan hệ là gì?",
+          "options": [
+            "Thay đổi vĩnh viễn dữ liệu trong cơ sở dữ liệu.",
+            "Chia nhỏ câu truy vấn phức tạp thành nhiều bước tuần tự, lưu kết quả trung gian vào các biến tạm.",
+            "Gán một giá trị mặc định cho các ô dữ liệu bị rỗng (null).",
+            "Đổi tên một quan hệ để tránh trùng lặp."
+          ],
+          "answer": "Chia nhỏ câu truy vấn phức tạp thành nhiều bước tuần tự, lưu kết quả trung gian vào các biến tạm.",
+          "explanation": "Đáp án đúng: Phép gán giúp lưu kết quả trung gian để tái sử dụng, làm cho biểu thức dài trở nên dễ đọc và quản lý hơn."
+        },
+        {
+          "type": "quiz",
+          "question": "Trong trường hợp nào việc sử dụng phép đổi tên (ρ) là BẮT BUỘC?",
+          "options": [
+            "Khi thực hiện phép chiếu để cắt bỏ cột.",
+            "Khi thực hiện phép hợp giữa hai bảng khả hợp.",
+            "Khi muốn thực hiện phép nối một bảng với chính nó (self-join).",
+            "Khi sử dụng các hàm kết hợp như SUM, AVG."
+          ],
+          "answer": "Khi muốn thực hiện phép nối một bảng với chính nó (self-join).",
+          "explanation": "Đáp án đúng: Khi nối bảng với chính nó, ta cần tạo ra hai bản sao với tên gọi khác nhau để hệ thống có thể phân biệt các cột, do đó phép đổi tên là bắt buộc."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép gán trong đại số quan hệ có tác dụng gì?",
+          "back": "Dùng để lưu trữ kết quả của một biểu thức đại số vào một biến quan hệ tạm thời, giúp chia nhỏ truy vấn phức tạp."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép đổi tên (ρ) bắt buộc phải sử dụng trong trường hợp nào?",
+          "back": "Bắt buộc dùng khi thực hiện phép nối một bảng với chính nó (self-join) để hệ thống có thể phân biệt hai bản sao của cùng một bảng."
+        },
+        {
+          "type": "essay",
+          "question": "Phân tích vai trò của phép đổi tên trong đại số quan hệ. Tại sao khi thực hiện phép nối một bảng với chính nó (self-join), nếu không có phép đổi tên thì hệ thống sẽ không thể xử lý được?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 45
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t11",
+      "title": "Hàm kết hợp và Phép gom nhóm",
+      "theory": {
+        "definition": "Hàm kết hợp thực hiện tính toán trên một tập hợp các giá trị để trả về một giá trị thống kê duy nhất, trong khi phép gom nhóm dùng để phân chia dữ liệu thành các nhóm nhỏ trước khi áp dụng hàm kết hợp.",
+        "explanation": "Các phép toán đại số cơ bản chỉ có thể xử lý dữ liệu trên từng dòng riêng lẻ. Tuy nhiên, trong thực tế ta thường cần những thông tin mang tính thống kê tổng hợp như tổng số (SUM), trung bình (AVG), giá trị lớn nhất (MAX), nhỏ nhất (MIN) hay đếm số lượng (COUNT). Đây chính là vai trò của các hàm kết hợp.\n\nĐể các hàm kết hợp phát huy tối đa sức mạnh, chúng thường được sử dụng song hành với phép gom nhóm (\\\\Im). Phép gom nhóm sẽ gom các dòng có cùng giá trị tại một số thuộc tính chỉ định lại thành từng cụm riêng biệt. Sau đó, hàm kết hợp sẽ được tính toán độc lập cho từng cụm đó, thay vì tính gộp trên toàn bộ bảng dữ liệu.",
+        "examples": [
+          "Sử dụng phép gom nhóm theo cột 'Mã phòng ban' (MAPHG) và áp dụng hàm COUNT() để đếm xem mỗi phòng ban có bao nhiêu nhân viên."
+        ],
+        "formulas": [
+          {
+            "name": "Phép gom nhóm và hàm kết hợp",
+            "expression": "G1, G2, .., Gk ℑ F1(A1), F2(A2), ..., Fn(An) (R)",
+            "note": "Gom nhóm quan hệ R theo các thuộc tính G1..Gk, sau đó áp dụng các hàm kết hợp F1..Fn lên các thuộc tính A1..An tương ứng cho từng nhóm."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Hàm kết hợp (SUM, AVG, MIN, MAX, COUNT) nhận đầu vào là một tập giá trị và trả về một giá trị đơn.",
+          "Phép gom nhóm phân chia quan hệ thành nhiều nhóm dựa trên các thuộc tính phân nhóm.",
+          "Hàm kết hợp thường được tính toán trên từng nhóm dữ liệu đã được phân chia."
+        ],
+        "common_mistakes": [
+          "Sử dụng thuộc tính không nằm trong danh sách gom nhóm (không phải là G) lẫn vào danh sách kết quả hiển thị cùng với các hàm kết hợp, gây ra lỗi logic."
+        ],
+        "related_topics": []
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Chức năng của các hàm kết hợp (như SUM, AVG, MAX, MIN, COUNT) là gì?",
+          "options": [
+            "Thay đổi giá trị của tất cả các dòng trong một cột.",
+            "Thực hiện tính toán trên một tập hợp các giá trị để trả về một giá trị thống kê duy nhất.",
+            "Gom các dòng có cùng giá trị lại thành từng cụm riêng biệt.",
+            "Nối các chuỗi ký tự lại với nhau thành một chuỗi dài."
+          ],
+          "answer": "Thực hiện tính toán trên một tập hợp các giá trị để trả về một giá trị thống kê duy nhất.",
+          "explanation": "Đáp án đúng: Hàm kết hợp nhận đầu vào là một tập giá trị (nhiều dòng) và trả về một giá trị đơn mang tính thống kê. Gom nhóm là chức năng của phép gom nhóm."
+        },
+        {
+          "type": "quiz",
+          "question": "Phép gom nhóm (ℑ) thường được sử dụng song hành với thành phần nào để phát huy tối đa sức mạnh?",
+          "options": [
+            "Phép tích Đề-các",
+            "Phép chia",
+            "Hàm kết hợp",
+            "Phép trừ"
+          ],
+          "answer": "Hàm kết hợp",
+          "explanation": "Đáp án đúng: Phép gom nhóm chia dữ liệu thành các cụm, sau đó hàm kết hợp sẽ được tính toán độc lập cho từng cụm đó (ví dụ: đếm số nhân viên của TỪNG phòng ban)."
+        },
+        {
+          "type": "quiz",
+          "question": "Một lỗi logic phổ biến khi sử dụng phép gom nhóm và hàm kết hợp là gì?",
+          "options": [
+            "Sử dụng hàm COUNT() trên cột khóa chính.",
+            "Gom nhóm theo nhiều hơn một thuộc tính.",
+            "Sử dụng thuộc tính không nằm trong danh sách gom nhóm lẫn vào danh sách kết quả hiển thị cùng với các hàm kết hợp.",
+            "Áp dụng hàm SUM() cho dữ liệu kiểu số thực."
+          ],
+          "answer": "Sử dụng thuộc tính không nằm trong danh sách gom nhóm lẫn vào danh sách kết quả hiển thị cùng với các hàm kết hợp.",
+          "explanation": "Đáp án đúng: Nếu một cột không được dùng để gom nhóm, nó sẽ có nhiều giá trị khác nhau trong cùng một nhóm, do đó không thể hiển thị trên cùng một dòng với kết quả duy nhất của hàm kết hợp."
+        },
+        {
+          "type": "flashcard",
+          "front": "Hàm kết hợp (Aggregate function) là gì?",
+          "back": "Là các hàm (SUM, AVG, MIN, MAX, COUNT) thực hiện tính toán trên một tập hợp các giá trị để trả về một giá trị thống kê duy nhất."
+        },
+        {
+          "type": "flashcard",
+          "front": "Mục đích của phép gom nhóm là gì?",
+          "back": "Phân chia dữ liệu thành các nhóm nhỏ (các dòng có cùng giá trị tại thuộc tính chỉ định) trước khi áp dụng hàm kết hợp cho từng nhóm đó."
+        },
+        {
+          "type": "essay",
+          "question": "Giải thích mối quan hệ tương hỗ giữa Phép gom nhóm và Hàm kết hợp. Tại sao việc đưa một thuộc tính không thuộc danh sách gom nhóm vào kết quả hiển thị lại gây ra lỗi logic?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 91
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    },
+    {
+      "id": "t12",
+      "title": "Phép nối ngoài (Outer Join)",
+      "theory": {
+        "definition": "Phép nối ngoài là sự mở rộng của phép nối thông thường, cho phép giữ lại cả những bộ dữ liệu không thỏa mãn điều kiện nối bằng cách gán giá trị rỗng (null) cho các thuộc tính bị thiếu.",
+        "explanation": "Hạn chế lớn nhất của phép nối thông thường (nối trong) là nó sẽ loại bỏ hoàn toàn những dòng dữ liệu ở bảng này nếu không tìm thấy dòng khớp tương ứng ở bảng kia, dẫn đến việc mất mát thông tin hiển thị. Phép nối ngoài ra đời để khắc phục điều này.\n\nCó ba biến thể của phép nối ngoài:\n- Nối ngoài trái (Left Outer Join): Đảm bảo toàn bộ các dòng của bảng bên trái đều xuất hiện trong kết quả. Nếu không có dòng khớp ở bảng phải, các cột của bảng phải sẽ bị bỏ trống (null).\n- Nối ngoài phải (Right Outer Join): Tương tự, nhưng giữ lại toàn bộ các dòng của bảng bên phải.\n- Nối ngoài đầy đủ (Full Outer Join): Giữ lại toàn bộ các dòng của cả hai bảng, điền null vào bất kỳ vị trí nào không có dữ liệu khớp.",
+        "examples": [
+          "Nối ngoài trái bảng SINHVIEN với bảng DIEM. Kết quả sẽ hiển thị toàn bộ sinh viên. Những sinh viên chưa thi môn nào (không có điểm) vẫn có tên trong danh sách, nhưng phần điểm số sẽ hiển thị là null."
+        ],
+        "formulas": [
+          {
+            "name": "Nối ngoài trái",
+            "expression": "R ⟕ S",
+            "note": "Giữ lại tất cả các bộ của R."
+          },
+          {
+            "name": "Nối ngoài phải",
+            "expression": "R ⟖ S",
+            "note": "Giữ lại tất cả các bộ của S."
+          },
+          {
+            "name": "Nối ngoài đầy đủ",
+            "expression": "R ⟗ S",
+            "note": "Giữ lại tất cả các bộ của cả R và S."
+          }
+        ],
+        "diagrams": [],
+        "key_points": [
+          "Mục đích chính là tránh mất mát thông tin khi thực hiện phép nối.",
+          "Các bộ không thỏa mãn điều kiện nối vẫn được đưa vào quan hệ kết quả.",
+          "Các thuộc tính không có dữ liệu tương ứng sẽ được tự động gán giá trị null.",
+          "Bao gồm 3 dạng: Nối ngoài trái, nối ngoài phải và nối ngoài đầy đủ."
+        ],
+        "common_mistakes": [
+          "Sử dụng nhầm nối trong thay vì nối ngoài khi cần lập báo cáo thống kê toàn bộ danh mục (ví dụ: báo cáo doanh thu của tất cả sản phẩm, kể cả sản phẩm chưa bán được)."
+        ],
+        "related_topics": [
+          "t08"
+        ]
+      },
+      "questions": [
+        {
+          "type": "quiz",
+          "question": "Mục đích chính của sự ra đời phép nối ngoài (Outer Join) là gì?",
+          "options": [
+            "Tăng tốc độ thực thi của câu truy vấn so với phép nối trong.",
+            "Tránh mất mát thông tin bằng cách giữ lại cả những bộ dữ liệu không thỏa mãn điều kiện nối.",
+            "Tự động loại bỏ các cột trùng lặp mà không cần chỉ định điều kiện.",
+            "Cho phép nối các bảng không có bất kỳ mối liên kết khóa ngoại nào."
+          ],
+          "answer": "Tránh mất mát thông tin bằng cách giữ lại cả những bộ dữ liệu không thỏa mãn điều kiện nối.",
+          "explanation": "Đáp án đúng: Nối trong sẽ loại bỏ dòng không khớp, gây mất thông tin. Nối ngoài khắc phục điều này bằng cách giữ lại dòng không khớp và gán null cho phần thiếu."
+        },
+        {
+          "type": "quiz",
+          "question": "Trong phép nối ngoài trái (Left Outer Join), hệ thống sẽ xử lý như thế nào nếu một dòng ở bảng bên trái không tìm thấy dòng khớp ở bảng bên phải?",
+          "options": [
+            "Dòng đó sẽ bị loại bỏ khỏi kết quả.",
+            "Hệ thống sẽ báo lỗi và dừng truy vấn.",
+            "Dòng đó vẫn xuất hiện trong kết quả, các cột của bảng phải sẽ bị bỏ trống (null).",
+            "Dòng đó sẽ được nhân bản lên nhiều lần để khớp với bảng phải."
+          ],
+          "answer": "Dòng đó vẫn xuất hiện trong kết quả, các cột của bảng phải sẽ bị bỏ trống (null).",
+          "explanation": "Đáp án đúng: Left Outer Join đảm bảo toàn bộ dòng bảng trái được giữ lại. Phần dữ liệu bảng phải không có sẽ được điền null."
+        },
+        {
+          "type": "quiz",
+          "question": "Phép nối ngoài đầy đủ (Full Outer Join) có đặc điểm gì?",
+          "options": [
+            "Chỉ giữ lại những dòng khớp nhau hoàn toàn ở cả hai bảng.",
+            "Giữ lại toàn bộ các dòng của cả hai bảng, điền null vào bất kỳ vị trí nào không có dữ liệu khớp.",
+            "Chỉ giữ lại các dòng không khớp nhau và loại bỏ các dòng khớp nhau.",
+            "Là sự kết hợp giữa phép nối bằng và phép tích Đề-các."
+          ],
+          "answer": "Giữ lại toàn bộ các dòng của cả hai bảng, điền null vào bất kỳ vị trí nào không có dữ liệu khớp.",
+          "explanation": "Đáp án đúng: Full Outer Join là sự kết hợp của Left và Right Outer Join, bảo toàn dữ liệu của cả hai bảng tham gia."
+        },
+        {
+          "type": "quiz",
+          "question": "Một sai lầm phổ biến khi lập các báo cáo thống kê toàn bộ danh mục (ví dụ: báo cáo tất cả sản phẩm, kể cả chưa bán được) là gì?",
+          "options": [
+            "Sử dụng phép nối ngoài đầy đủ thay vì nối ngoài trái.",
+            "Sử dụng nhầm nối trong thay vì nối ngoài, dẫn đến việc các sản phẩm chưa bán được bị biến mất khỏi báo cáo.",
+            "Sử dụng phép tích Đề-các làm treo hệ thống.",
+            "Sử dụng hàm COUNT thay vì hàm SUM."
+          ],
+          "answer": "Sử dụng nhầm nối trong thay vì nối ngoài, dẫn đến việc các sản phẩm chưa bán được bị biến mất khỏi báo cáo.",
+          "explanation": "Đáp án đúng: Nối trong chỉ lấy phần giao (sản phẩm ĐÃ bán). Để lấy toàn bộ danh mục (kể cả chưa bán), bắt buộc phải dùng nối ngoài (Left/Right Join)."
+        },
+        {
+          "type": "flashcard",
+          "front": "Phép nối ngoài (Outer Join) khác phép nối trong ở điểm cốt lõi nào?",
+          "back": "Phép nối ngoài cho phép giữ lại cả những bộ dữ liệu KHÔNG thỏa mãn điều kiện nối bằng cách gán giá trị rỗng (null) cho các thuộc tính bị thiếu."
+        },
+        {
+          "type": "flashcard",
+          "front": "Nối ngoài trái (Left Outer Join) hoạt động như thế nào?",
+          "back": "Đảm bảo toàn bộ các dòng của bảng bên trái đều xuất hiện trong kết quả. Nếu không có dòng khớp ở bảng phải, các cột tương ứng sẽ nhận giá trị null."
+        },
+        {
+          "type": "essay",
+          "question": "So sánh Phép nối trong (Inner Join) và Phép nối ngoài trái (Left Outer Join). Trong tình huống quản lý doanh nghiệp (ví dụ: thống kê doanh thu nhân viên), khi nào bắt buộc phải sử dụng Phép nối ngoài?"
+        }
+      ],
+      "sources": [
+        {
+          "file": "Bài giảng CSDL - Khoa CNTT.pdf",
+          "page": 100
+        }
+      ],
+      "is_extended": false,
+      "extended_source_url": null
+    }
+  ]
+}
