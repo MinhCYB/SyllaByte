@@ -1,0 +1,15 @@
+# Data
+data/raw/*
+data/processed/*
+
+# Giữ lại cấu trúc thư mục
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+
+# OS
+.DS_Store
+Thumbs.db

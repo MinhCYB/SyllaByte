@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SyllaByte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #F5F3EE;
+  --surface: #FDFCFA;
+  --surface2: #EFEDE8;
+  --border: #E2DED6;
+  --border2: #CBC6BC;
+  --text: #1A1814;
+  --text2: #6B6560;
+  --text3: #9E9890;
+  --accent: #2B5CE6;
+  --accent-bg: #EEF2FD;
+  --accent-text: #1A3DA8;
+  --green: #1A7A4A;
+  --green-bg: #E8F5EE;
+  --green-border: #A8D9BC;
+  --amber: #92500A;
+  --amber-bg: #FEF3E2;
+  --red: #C0392B;
+  --red-bg: #FDEEEC;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 3px rgba(26,24,20,.06), 0 1px 2px rgba(26,24,20,.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── TOPBAR ── */
+#topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  height: 52px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -.02em;
+  color: var(--text);
+  flex-shrink: 0;
+}
+.logo span { color: var(--accent); }
+
+.subject-select-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.subject-select-wrap::after {
+  content: '▾';
+  font-size: 10px;
+  color: var(--text3);
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+#subject-select {
+  appearance: none;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 28px 5px 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  outline: none;
+  transition: border-color .15s;
+}
+#subject-select:focus { border-color: var(--accent); }
+
+.spacer { flex: 1; }
+
+.tab-group {
+  display: flex;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  gap: 2px;
+}
+.tab-btn {
+  padding: 5px 14px;
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text2);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 500;
+  box-shadow: var(--shadow);
+}
+
+/* ── LAYOUT ── */
+#layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-header {
+  padding: 14px 16px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+}
+.chapter-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 8px;
+}
+.chapter-list::-webkit-scrollbar { width: 4px; }
+.chapter-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.ch-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background .12s;
+  gap: 8px;
+}
+.ch-item:hover { background: var(--surface2); }
+.ch-item.active { background: var(--accent-bg); }
+.ch-item.active .ch-name { color: var(--accent-text); font-weight: 500; }
+.ch-item.active .ch-count { background: var(--accent); color: #fff; }
+
+.ch-name {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.4;
+  flex: 1;
+}
+.ch-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  background: var(--surface2);
+  color: var(--text3);
+  padding: 1px 6px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 6px;
+}
+.progress-bar {
+  height: 4px;
+  background: var(--surface2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width .4s ease;
+}
+
+/* ── CONTENT ── */
+#content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  min-width: 0;
+}
+#content::-webkit-scrollbar { width: 5px; }
+#content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+.content-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+  color: var(--text3);
+}
+.content-empty .icon { font-size: 36px; opacity: .4; }
+.content-empty p { font-size: 14px; }
+
+/* ── TOPIC CARD ── */
+.topic-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: box-shadow .15s;
+}
+.topic-card:hover { box-shadow: var(--shadow); }
+
+.topic-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 12px;
+  gap: 12px;
+}
+.topic-title { font-size: 15px; font-weight: 500; }
+.topic-source {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  background: var(--surface2);
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── THEORY MODE ── */
+.theory-body { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 14px; }
+
+.theory-section-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 5px;
+}
+
+.definition-box {
+  border-left: 3px solid var(--accent);
+  padding: 8px 12px;
+  background: var(--accent-bg);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.explanation { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+.key-points { display: flex; flex-direction: column; gap: 4px; }
+.key-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.key-point::before {
+  content: '·';
+  color: var(--accent);
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.diagram-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  font-size: 13px;
+  color: var(--text2);
+  text-align: center;
+  font-style: italic;
+}
+.diagram-caption {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 8px;
+  font-style: normal;
+}
+.diagram-rendered { overflow-x: auto; }
+
+.formula-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+.formula-name { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.formula-expr {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--text);
+}
+.formula-note { font-size: 11px; color: var(--text3); margin-top: 3px; }
+
+.tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin: 2px 2px 0 0; }
+.tag-mistake { background: var(--red-bg); color: var(--red); }
+.tag-related { background: var(--accent-bg); color: var(--accent-text); cursor: pointer; }
+
+/* ── PRACTICE MODE ── */
+.practice-body { padding: 0 16px 16px; }
+
+.qtype-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.qtype-btn {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .12s;
+}
+.qtype-btn:hover { border-color: var(--accent); color: var(--accent-text); }
+.qtype-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 500; }
+
+.question-area { min-height: 60px; }
+
+/* Quiz */
+.quiz-question { font-size: 14px; color: var(--text); margin-bottom: 10px; line-height: 1.6; }
+.quiz-options { display: flex; flex-direction: column; gap: 6px; }
+.quiz-option {
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .12s;
+  color: var(--text);
+  background: var(--surface);
+}
+.quiz-option:hover:not(.answered) { border-color: var(--accent); background: var(--accent-bg); }
+.quiz-option.correct { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.quiz-option.wrong { border-color: var(--red); background: var(--red-bg); color: var(--red); }
+.quiz-explanation {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.6;
+  display: none;
+}
+.quiz-next-btn {
+  margin-top: 10px;
+  padding: 6px 16px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  display: none;
+  transition: opacity .15s;
+}
+.quiz-next-btn:hover { opacity: .85; }
+
+/* Flashcard */
+.flashcard-wrap {
+  perspective: 1000px;
+  cursor: pointer;
+  height: 140px;
+}
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .4s ease;
+}
+.flashcard-wrap.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  backface-visibility: hidden;
+  text-align: center;
+}
+.flashcard-front { background: var(--surface2); }
+.flashcard-back {
+  background: var(--accent-bg);
+  border-color: #c8d6f7;
+  transform: rotateY(180deg);
+}
+.flashcard-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+.flashcard-back .flashcard-label { color: var(--accent-text); opacity: .7; }
+.flashcard-text { font-size: 14px; color: var(--text); line-height: 1.6; }
+.flashcard-back .flashcard-text { color: var(--accent-text); }
+.flashcard-hint { font-size: 11px; color: var(--text3); margin-top: 8px; }
+
+/* Essay */
+.essay-question { font-size: 14px; color: var(--text); margin-bottom: 10px; line-height: 1.6; }
+.essay-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface2);
+  resize: vertical;
+  outline: none;
+  transition: border-color .15s;
+  line-height: 1.6;
+}
+.essay-textarea:focus { border-color: var(--accent); background: var(--surface); }
+
+.topic-done-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--green);
+  font-weight: 500;
+}
+.topic-done-badge::before { content: '✓'; }
+
+/* ── STATS TAB ── */
+.stats-body { padding: 0; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .07em; }
+.stat-value { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; color: var(--text); }
+.stat-sub { font-size: 11px; color: var(--text2); }
+
+.stats-section-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: 8px;
+}
+.topic-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.tp-name { flex: 1; color: var(--text); }
+.tp-bar { width: 100px; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.tp-fill { height: 100%; background: var(--accent); border-radius: 2px; }
+.tp-pct { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); width: 32px; text-align: right; flex-shrink: 0; }
+
+/* ── CHAPTER STATS ROW ── */
+.chapter-stats-bar {
+  display: flex;
+  gap: 20px;
+  padding: 10px 16px;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.cstat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.cstat-val { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 500; color: var(--text); }
+.cstat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .07em; }
+
+/* ── LOADING ── */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  gap: 10px;
+  color: var(--text3);
+}
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── ERROR ── */
+.error-banner {
+  background: var(--red-bg);
+  border: 1px solid #f0b4ae;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--red);
+  margin-bottom: 14px;
+  display: none;
+}
+
+.section-block { margin-bottom: 10px; }
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <span class="logo">Sylla<span>Byte</span></span>
+  <div class="subject-select-wrap">
+    <select id="subject-select"><option value="">-- Chọn môn --</option></select>
+  </div>
+  <div class="spacer"></div>
+  <div class="tab-group">
+    <button class="tab-btn active" data-tab="theory">Lý thuyết</button>
+    <button class="tab-btn" data-tab="practice">Luyện tập</button>
+    <button class="tab-btn" data-tab="stats">Thống kê</button>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div id="layout">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sidebar-header">Chương</div>
+    <div class="chapter-list" id="chapter-list">
+      <div class="content-empty" style="height:120px;">
+        <p>Chọn môn để bắt đầu</p>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="progress-label">
+        <span>Đã ôn</span>
+        <span id="progress-text">0 / 0 topics</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+    <div class="content-empty" id="empty-state">
+      <div class="icon">📖</div>
+      <p>Chọn môn và chương để bắt đầu học</p>
+    </div>
+    <div id="error-banner" class="error-banner"></div>
+    <div id="topic-list"></div>
+  </div>
+
+</div>
+
+<script>
+/* ── STATE ── */
+const STATE = {
+  tab: 'theory',
+  subject: null,
+  chapter: null,
+  subjectMeta: null,
+  chapterData: null,
+  /* progress: { [subjectId]: { [chapterId]: { [topicId]: { done, qtypes } } } } */
+  progress: JSON.parse(localStorage.getItem('sb_progress') || '{}'),
+  /* quizState: { [topicId]: { qindex, answered, done } } */
+  quizState: {},
+};
+
+function saveProgress() {
+  localStorage.setItem('sb_progress', JSON.stringify(STATE.progress));
+}
+
+function getTopicProgress(subjectId, chapterId, topicId) {
+  return STATE.progress?.[subjectId]?.[chapterId]?.[topicId] || { done: false };
+}
+
+function setTopicDone(subjectId, chapterId, topicId) {
+  if (!STATE.progress[subjectId]) STATE.progress[subjectId] = {};
+  if (!STATE.progress[subjectId][chapterId]) STATE.progress[subjectId][chapterId] = {};
+  STATE.progress[subjectId][chapterId][topicId] = { done: true };
+  saveProgress();
+  updateSidebarProgress();
+}
+
+/* ── LOAD SUBJECTS (index.json files auto-discover via subjects.json or list) ── */
+/* Convention: docs/data/processed/ contains one folder per subject,
+   each with index.json. We expect a subjects.json at docs/data/processed/subjects.json
+   listing available subjects, OR the user can edit the SUBJECTS constant below. */
+
+// ── EDIT THIS to match your folder structure ──
+const DATA_ROOT = 'data/processed';
+
+async function fetchJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
+  return res.json();
+}
+
+async function loadSubjects() {
+  const sel = document.getElementById('subject-select');
+  try {
+    const subjects = await fetchJSON(`${DATA_ROOT}/subjects.json`);
+    subjects.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.name;
+      sel.appendChild(opt);
+    });
+  } catch {
+    // Fallback: show error hint
+    sel.innerHTML = '<option value="">Cần subjects.json</option>';
+    showError('Không tìm thấy subjects.json. Xem README để cấu hình.');
+  }
+}
+
+async function loadSubjectIndex(subjectId) {
+  const data = await fetchJSON(`${DATA_ROOT}/${subjectId}/index.json`);
+  STATE.subjectMeta = data;
+  renderChapterList(data.chapters);
+  updateSidebarProgress();
+}
+
+async function loadChapter(subjectId, chapterId, chapterFile) {
+  showLoading();
+  try {
+    const data = await fetchJSON(`${DATA_ROOT}/${subjectId}/${chapterFile}`);
+    STATE.chapterData = data;
+    STATE.quizState = {};
+    renderContent();
+  } catch (e) {
+    showError(`Không load được chương: ${e.message}`);
+    hideLoading();
+  }
+}
+
+/* ── SIDEBAR ── */
+function renderChapterList(chapters) {
+  const list = document.getElementById('chapter-list');
+  list.innerHTML = '';
+  chapters.forEach(ch => {
+    const el = document.createElement('div');
+    el.className = 'ch-item' + (STATE.chapter === ch.id ? ' active' : '');
+    el.dataset.id = ch.id;
+    el.dataset.file = ch.file;
+    el.innerHTML = `<span class="ch-name">${ch.title}</span><span class="ch-count">${ch.topic_count}</span>`;
+    el.addEventListener('click', () => selectChapter(ch));
+    list.appendChild(el);
+  });
+}
+
+function selectChapter(ch) {
+  STATE.chapter = ch.id;
+  document.querySelectorAll('.ch-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.id === ch.id);
+  });
+  loadChapter(STATE.subject, ch.id, ch.file);
+}
+
+function updateSidebarProgress() {
+  if (!STATE.subjectMeta || !STATE.chapter) return;
+  const chapters = STATE.subjectMeta.chapters;
+  let total = 0, done = 0;
+  chapters.forEach(ch => {
+    const topicCount = ch.topic_count;
+    total += topicCount;
+    const chProg = STATE.progress?.[STATE.subject]?.[ch.id] || {};
+    done += Object.values(chProg).filter(t => t.done).length;
+  });
+  document.getElementById('progress-text').textContent = `${done} / ${total} topics`;
+  document.getElementById('progress-fill').style.width = total ? `${Math.round(done / total * 100)}%` : '0%';
+}
+
+/* ── CONTENT RENDER ── */
+function showLoading() {
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('topic-list').innerHTML = '<div class="loading-state"><div class="spinner"></div><span>Đang tải...</span></div>';
+}
+function hideLoading() {
+  document.getElementById('topic-list').innerHTML = '';
+}
+function showError(msg) {
+  const el = document.getElementById('error-banner');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function renderContent() {
+  const list = document.getElementById('topic-list');
+  list.innerHTML = '';
+  document.getElementById('error-banner').style.display = 'none';
+  document.getElementById('empty-state').style.display = 'none';
+
+  if (!STATE.chapterData) return;
+  const { topics } = STATE.chapterData;
+
+  if (STATE.tab === 'stats') {
+    renderStats(list);
+    return;
+  }
+
+  topics.forEach(topic => {
+    const card = document.createElement('div');
+    card.className = 'topic-card';
+    card.id = `topic-${topic.id}`;
+
+    const prog = getTopicProgress(STATE.subject, STATE.chapter, topic.id);
+    const srcText = topic.sources?.map(s => `${s.file} · tr.${s.page}`).join(', ') || '';
+
+    card.innerHTML = `
+      <div class="topic-header">
+        <span class="topic-title">${topic.title}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${prog.done ? '<span class="topic-done-badge">Hoàn thành</span>' : ''}
+          ${srcText ? `<span class="topic-source">${srcText}</span>` : ''}
+        </div>
+      </div>
+      <div class="topic-body"></div>
+    `;
+
+    const body = card.querySelector('.topic-body');
+    if (STATE.tab === 'theory') {
+      renderTheory(body, topic);
+    } else {
+      renderPractice(body, topic);
+    }
+
+    list.appendChild(card);
+  });
+
+  // Chapter stats bar
+  const statsBar = document.createElement('div');
+  statsBar.className = 'chapter-stats-bar';
+  const totalQ = topics.reduce((s, t) => s + (t.questions?.length || 0), 0);
+  const totalD = topics.reduce((s, t) => s + (t.theory?.diagrams?.length || 0), 0);
+  const donePct = calcChapterDone();
+  statsBar.innerHTML = `
+    <div class="cstat"><span class="cstat-val">${topics.length}</span><span class="cstat-lbl">Topics</span></div>
+    <div class="cstat"><span class="cstat-val">${totalQ}</span><span class="cstat-lbl">Câu hỏi</span></div>
+    <div class="cstat"><span class="cstat-val">${totalD}</span><span class="cstat-lbl">Sơ đồ</span></div>
+    <div class="cstat"><span class="cstat-val">${donePct}%</span><span class="cstat-lbl">Hoàn thành</span></div>
+  `;
+  list.appendChild(statsBar);
+
+  // Render mermaid diagrams after DOM insert
+  if (STATE.tab === 'theory') {
+    setTimeout(() => mermaid.run(), 100);
+  }
+}
+
+function calcChapterDone() {
+  if (!STATE.chapterData) return 0;
+  const topics = STATE.chapterData.topics;
+  if (!topics.length) return 0;
+  const done = topics.filter(t => getTopicProgress(STATE.subject, STATE.chapter, t.id).done).length;
+  return Math.round(done / topics.length * 100);
+}
+
+/* ── THEORY RENDER ── */
+function renderTheory(body, topic) {
+  body.className = 'theory-body';
+  const th = topic.theory;
+  if (!th) { body.innerHTML = '<p style="color:var(--text3);font-size:13px;">Không có dữ liệu lý thuyết.</p>'; return; }
+
+  let html = '';
+
+  if (th.definition) {
+    html += `<div class="section-block">
+      <div class="theory-section-label">Định nghĩa</div>
+      <div class="definition-box">${th.definition}</div>
+    </div>`;
+  }
+
+  if (th.explanation) {
+    const paras = Array.isArray(th.explanation) ? th.explanation : [th.explanation];
+    html += `<div class="section-block">
+      <div class="theory-section-label">Giải thích</div>
+      ${paras.map(p => `<div class="explanation">${p}</div>`).join('')}
+    </div>`;
+  }
+
+  if (th.key_points?.length) {
+    html += `<div class="section-block">
+      <div class="theory-section-label">Điểm quan trọng</div>
+      <div class="key-points">${th.key_points.map(k => `<div class="key-point">${k}</div>`).join('')}</div>
+    </div>`;
+  }
+
+  if (th.formulas?.length) {
+    html += `<div class="section-block">
+      <div class="theory-section-label">Công thức</div>
+      ${th.formulas.map(f => `<div class="formula-box">
+        <div class="formula-name">${f.name}</div>
+        <div class="formula-expr">${f.expression}</div>
+        ${f.note ? `<div class="formula-note">${f.note}</div>` : ''}
+      </div>`).join('')}
+    </div>`;
+  }
+
+  if (th.diagrams?.length) {
+    html += `<div class="section-block">
+      <div class="theory-section-label">Sơ đồ</div>
+      ${th.diagrams.map(d => {
+        if (d.type === 'mermaid') {
+          return `<div class="diagram-box">
+            <div class="diagram-rendered"><pre class="mermaid">${d.content}</pre></div>
+            ${d.caption ? `<div class="diagram-caption">${d.caption}</div>` : ''}
+          </div>`;
+        }
+        return `<div class="diagram-box">
+          <div style="opacity:.5;">${d.title || d.id}</div>
+          ${d.caption ? `<div class="diagram-caption">${d.caption}</div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  if (th.examples?.length) {
+    html += `<div class="section-block">
+      <div class="theory-section-label">Ví dụ</div>
+      <div class="key-points">${th.examples.map(e => `<div class="key-point">${e}</div>`).join('')}</div>
+    </div>`;
+  }
+
+  if (th.common_mistakes?.length) {
+    html += `<div class="section-block">
+      <div class="theory-section-label">Lỗi thường gặp</div>
+      <div>${th.common_mistakes.map(m => `<span class="tag tag-mistake">${m}</span>`).join('')}</div>
+    </div>`;
+  }
+
+  body.innerHTML = html;
+
+  // Mark done button
+  const prog = getTopicProgress(STATE.subject, STATE.chapter, topic.id);
+  if (!prog.done) {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-next-btn';
+    btn.style.display = 'inline-block';
+    btn.style.marginTop = '4px';
+    btn.textContent = '✓ Đánh dấu đã ôn';
+    btn.onclick = () => {
+      setTopicDone(STATE.subject, STATE.chapter, topic.id);
+      // Refresh card header
+      const header = document.querySelector(`#topic-${topic.id} .topic-header`);
+      if (header) {
+        const existing = header.querySelector('.topic-done-badge');
+        if (!existing) {
+          const badge = document.createElement('span');
+          badge.className = 'topic-done-badge';
+          badge.textContent = 'Hoàn thành';
+          header.querySelector('div').prepend(badge);
+        }
+      }
+      btn.remove();
+    };
+    body.appendChild(btn);
+  }
+}
+
+/* ── PRACTICE RENDER ── */
+function renderPractice(body, topic) {
+  body.className = 'practice-body';
+  const qs = topic.questions;
+  if (!qs?.length) {
+    body.innerHTML = '<p style="color:var(--text3);font-size:13px;padding-bottom:4px;">Chưa có câu hỏi cho topic này.</p>';
+    return;
+  }
+
+  const types = [...new Set(qs.map(q => q.type))];
+  const tid = topic.id;
+
+  if (!STATE.quizState[tid]) {
+    STATE.quizState[tid] = { type: types[0], qindex: 0, answered: false };
+  }
+
+  const qs_of_type = () => qs.filter(q => q.type === STATE.quizState[tid].type);
+
+  function rebuild() {
+    body.innerHTML = '';
+    const st = STATE.quizState[tid];
+    const curType = st.type;
+    const filteredQs = qs_of_type();
+
+    // Type tabs
+    const tabRow = document.createElement('div');
+    tabRow.className = 'qtype-tabs';
+    const typeLabels = { quiz: 'Quiz', flashcard: 'Flashcard', essay: 'Tự luận' };
+    types.forEach(t => {
+      const btn = document.createElement('button');
+      btn.className = 'qtype-btn' + (t === curType ? ' active' : '');
+      btn.textContent = typeLabels[t] || t;
+      btn.onclick = () => {
+        STATE.quizState[tid].type = t;
+        STATE.quizState[tid].qindex = 0;
+        STATE.quizState[tid].answered = false;
+        rebuild();
+      };
+      tabRow.appendChild(btn);
+    });
+    body.appendChild(tabRow);
+
+    const area = document.createElement('div');
+    area.className = 'question-area';
+    body.appendChild(area);
+
+    if (!filteredQs.length) {
+      area.innerHTML = '<p style="color:var(--text3);font-size:13px;">Không có câu hỏi loại này.</p>';
+      return;
+    }
+
+    const qi = Math.min(st.qindex, filteredQs.length - 1);
+    const q = filteredQs[qi];
+
+    if (curType === 'quiz') renderQuiz(area, q, tid, filteredQs, qi);
+    else if (curType === 'flashcard') renderFlashcard(area, q, tid);
+    else renderEssay(area, q, tid);
+  }
+
+  rebuild();
+}
+
+function renderQuiz(area, q, tid, allQs, qi) {
+  const st = STATE.quizState[tid];
+  area.innerHTML = `
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+      <span style="font-size:11px;color:var(--text3);">Câu ${qi+1} / ${allQs.length}</span>
+    </div>
+    <div class="quiz-question">${q.question}</div>
+    <div class="quiz-options">
+      ${q.options.map((opt, i) => `<div class="quiz-option" data-idx="${i}">${opt}</div>`).join('')}
+    </div>
+    <div class="quiz-explanation" id="qexp-${tid}">💡 ${q.explanation || ''}</div>
+    <button class="quiz-next-btn" id="qnext-${tid}">
+      ${qi + 1 < allQs.length ? 'Câu tiếp →' : 'Hoàn thành ✓'}
+    </button>
+  `;
+
+  const opts = area.querySelectorAll('.quiz-option');
+  const expEl = area.querySelector(`#qexp-${tid}`);
+  const nextBtn = area.querySelector(`#qnext-${tid}`);
+
+  if (st.answered) {
+    opts.forEach((el, i) => {
+      el.classList.add('answered');
+      if (q.options[i] === q.answer) el.classList.add('correct');
+    });
+    expEl.style.display = 'block';
+    nextBtn.style.display = 'inline-block';
+  }
+
+  opts.forEach((el, i) => {
+    el.addEventListener('click', () => {
+      if (st.answered) return;
+      st.answered = true;
+      opts.forEach((o, j) => {
+        o.classList.add('answered');
+        if (q.options[j] === q.answer) o.classList.add('correct');
+        else if (j === i && q.options[j] !== q.answer) o.classList.add('wrong');
+      });
+      expEl.style.display = 'block';
+      nextBtn.style.display = 'inline-block';
+    });
+  });
+
+  nextBtn.addEventListener('click', () => {
+    const filteredQs = STATE.chapterData.topics
+      .find(t => t.id === tid)?.questions
+      ?.filter(q => q.type === st.type) || [];
+    if (st.qindex + 1 < filteredQs.length) {
+      st.qindex++;
+      st.answered = false;
+    } else {
+      setTopicDone(STATE.subject, STATE.chapter, tid);
+      st.qindex = 0;
+      st.answered = false;
+    }
+    // Rebuild practice body
+    const card = document.getElementById(`topic-${tid}`);
+    const body = card?.querySelector('.practice-body');
+    if (body) renderPractice(body, STATE.chapterData.topics.find(t => t.id === tid));
+  });
+}
+
+function renderFlashcard(area, q, tid) {
+  const wrap = document.createElement('div');
+  wrap.className = 'flashcard-wrap';
+  wrap.innerHTML = `
+    <div class="flashcard-inner">
+      <div class="flashcard-front">
+        <div class="flashcard-label">Câu hỏi</div>
+        <div class="flashcard-text">${q.front}</div>
+        <div class="flashcard-hint">Click để lật ↓</div>
+      </div>
+      <div class="flashcard-back">
+        <div class="flashcard-label">Trả lời</div>
+        <div class="flashcard-text">${q.back}</div>
+      </div>
+    </div>
+  `;
+  wrap.addEventListener('click', () => wrap.classList.toggle('flipped'));
+  area.appendChild(wrap);
+
+  // Nav buttons
+  const allQs = STATE.chapterData.topics.find(t => t.id === tid)?.questions?.filter(q => q.type === 'flashcard') || [];
+  const st = STATE.quizState[tid];
+  const nav = document.createElement('div');
+  nav.style.cssText = 'display:flex;gap:8px;margin-top:10px;align-items:center;';
+  nav.innerHTML = `
+    <button class="quiz-next-btn" id="fc-prev" style="display:${st.qindex > 0 ? 'inline-block' : 'none'};">← Trước</button>
+    <span style="font-size:11px;color:var(--text3);flex:1;text-align:center;">${st.qindex+1} / ${allQs.length}</span>
+    <button class="quiz-next-btn" id="fc-next" style="display:${st.qindex+1 < allQs.length ? 'inline-block' : 'none'};">Tiếp →</button>
+  `;
+  area.appendChild(nav);
+
+  nav.querySelector('#fc-prev')?.addEventListener('click', () => {
+    st.qindex = Math.max(0, st.qindex - 1);
+    const topic = STATE.chapterData.topics.find(t => t.id === tid);
+    const body = document.getElementById(`topic-${tid}`)?.querySelector('.practice-body');
+    if (body) renderPractice(body, topic);
+  });
+  nav.querySelector('#fc-next')?.addEventListener('click', () => {
+    st.qindex = Math.min(allQs.length - 1, st.qindex + 1);
+    const topic = STATE.chapterData.topics.find(t => t.id === tid);
+    const body = document.getElementById(`topic-${tid}`)?.querySelector('.practice-body');
+    if (body) renderPractice(body, topic);
+  });
+}
+
+function renderEssay(area, q, tid) {
+  area.innerHTML = `
+    <div class="essay-question">${q.question}</div>
+    <textarea class="essay-textarea" placeholder="Viết câu trả lời của bạn..."></textarea>
+    <button class="quiz-next-btn" style="display:inline-block;margin-top:8px;">Lưu & Tiếp</button>
+  `;
+  area.querySelector('.quiz-next-btn').addEventListener('click', () => {
+    setTopicDone(STATE.subject, STATE.chapter, tid);
+    const allQs = STATE.chapterData.topics.find(t => t.id === tid)?.questions?.filter(q => q.type === 'essay') || [];
+    const st = STATE.quizState[tid];
+    if (st.qindex + 1 < allQs.length) {
+      st.qindex++;
+      const topic = STATE.chapterData.topics.find(t => t.id === tid);
+      const body = document.getElementById(`topic-${tid}`)?.querySelector('.practice-body');
+      if (body) renderPractice(body, topic);
+    }
+  });
+}
+
+/* ── STATS ── */
+function renderStats(list) {
+  if (!STATE.chapterData) return;
+  const topics = STATE.chapterData.topics;
+  const totalQ = topics.reduce((s, t) => s + (t.questions?.length || 0), 0);
+  const totalD = topics.reduce((s, t) => s + (t.theory?.diagrams?.length || 0), 0);
+  const donePct = calcChapterDone();
+  const doneCount = topics.filter(t => getTopicProgress(STATE.subject, STATE.chapter, t.id).done).length;
+
+  list.innerHTML = `
+    <div class="stats-body">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Topics</div><div class="stat-value">${topics.length}</div></div>
+        <div class="stat-card"><div class="stat-label">Câu hỏi</div><div class="stat-value">${totalQ}</div></div>
+        <div class="stat-card"><div class="stat-label">Sơ đồ</div><div class="stat-value">${totalD}</div></div>
+        <div class="stat-card"><div class="stat-label">Hoàn thành</div><div class="stat-value">${donePct}%</div><div class="stat-sub">${doneCount} / ${topics.length} topics</div></div>
+      </div>
+      <div class="stats-section-title">Tiến độ từng topic</div>
+      ${topics.map(t => {
+        const done = getTopicProgress(STATE.subject, STATE.chapter, t.id).done;
+        const pct = done ? 100 : 0;
+        return `<div class="topic-progress-row">
+          <span class="tp-name">${t.title}</span>
+          <div class="tp-bar"><div class="tp-fill" style="width:${pct}%"></div></div>
+          <span class="tp-pct">${pct}%</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+/* ── INIT ── */
+mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'loose' });
+
+document.getElementById('subject-select').addEventListener('change', async e => {
+  const val = e.target.value;
+  if (!val) return;
+  STATE.subject = val;
+  STATE.chapter = null;
+  STATE.chapterData = null;
+  document.getElementById('topic-list').innerHTML = '';
+  document.getElementById('empty-state').style.display = 'flex';
+  document.getElementById('chapter-list').innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+  try {
+    await loadSubjectIndex(val);
+  } catch(err) {
+    showError(`Không load được môn: ${err.message}`);
+    document.getElementById('chapter-list').innerHTML = '';
+  }
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    STATE.tab = btn.dataset.tab;
+    if (STATE.chapterData) renderContent();
+  });
+});
+
+loadSubjects();
+</script>
+</body>
+</html>
