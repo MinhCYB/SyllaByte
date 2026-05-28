@@ -1,7 +1,8 @@
 """
 Cách dùng:
-  python logic/main.py --all
+  python logic/main.py
   python logic/main.py --subject mang_may_tinh
+  python logic/main.py --validate-only
   python logic/main.py --subject mang_may_tinh --validate-only
 """
 import argparse
@@ -79,18 +80,11 @@ def write_subjects_json():
 
 def main():
     parser = argparse.ArgumentParser(description="SyllaByte — Pipeline xử lý JSON")
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--all", action="store_true", help="Xử lý tất cả môn học")
-    group.add_argument("--subject", metavar="TÊN", help="Xử lý một môn cụ thể")
-    parser.add_argument(
-        "--validate-only",
-        action="store_true",
-        help="Chỉ validate, không merge",
-    )
+    parser.add_argument("--subject", metavar="TÊN", help="Chỉ xử lý một môn cụ thể (mặc định: tất cả)")
+    parser.add_argument("--validate-only", action="store_true", help="Chỉ validate, không merge")
     args = parser.parse_args()
 
-    subject_name = None if args.all else args.subject
-    subject_dirs = get_subjects(subject_name)
+    subject_dirs = get_subjects(args.subject)
 
     if not subject_dirs:
         print("Không tìm thấy môn học nào trong data/raw/")

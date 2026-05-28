@@ -16,7 +16,7 @@ SyllaByte/
         <chương>_theory.json
         <chương>_questions.json
     processed/
-      subjects.json
+      subjects.json          ← tự sinh bởi main.py
       <môn>/
         index.json
         <chương>.json
@@ -54,11 +54,12 @@ SyllaByte/data/raw/<môn>/<chương>_questions.json
         |
         | Bước 3 — Merge và validate
         v
-python logic/main.py --subject <môn>
+python logic/main.py   (hoặc --subject <môn>)
         |
         v
 SyllaByte/data/processed/<môn>/index.json
 SyllaByte/data/processed/<môn>/<chương>.json
+SyllaByte/data/processed/subjects.json   ← tự sinh, không cần tạo tay
         |
         | Bước 4 — Xem web app
         v
@@ -101,16 +102,21 @@ Lặp lại bước 1 và 2 cho từng chương của từng môn.
 
 ### Bước 3 — Merge và validate
 
-Sau khi đã có đủ file theory và questions cho một môn, chạy lệnh sau từ thư mục gốc của project:
+Chạy từ thư mục gốc của project. Có 2 cách:
 
 ```bash
-python logic/main.py --subject <tên môn>
+# Xử lý tất cả môn trong data/raw/ (mặc định)
+python logic/main.py
+
+# Xử lý một môn cụ thể
+python logic/main.py --subject mang_may_tinh
 ```
 
-Ví dụ:
+Nếu chỉ muốn kiểm tra lỗi mà chưa merge:
 
 ```bash
-python logic/main.py --subject mang_may_tinh
+python logic/main.py --validate-only
+python logic/main.py --subject mang_may_tinh --validate-only
 ```
 
 Script sẽ:
